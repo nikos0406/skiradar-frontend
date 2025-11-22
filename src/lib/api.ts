@@ -16,7 +16,12 @@ function buildUrl(path: string) {
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
   }
-  return `${API_BASE_URL}${path}`;
+
+  if (typeof window === "undefined") {
+    return `${API_BASE_URL}${path}`;
+  }
+
+  return path;
 }
 
 async function parseResponse<T>(response: Response): Promise<T> {
