@@ -8,7 +8,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",                           // was der Browser aufruft
+        source: "/api/:path*",
         destination: `${API_BASE_URL}/api/:path*`,
       },
     ];
