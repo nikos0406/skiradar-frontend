@@ -1,6 +1,4 @@
-/* =========================================
-   src – Global Styles (Optimiert)
-   ========================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 /* Root-Variablen / Design-Tokens */
 :root {
@@ -78,8 +76,7 @@ body {
 
 body {
   min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   background-color: #2778c0;
   background-image: radial-gradient(circle at top, #eef4ff 0%, #e6e6e6 45%, #e5e5e5 100%);
   background-repeat: no-repeat;
@@ -88,6 +85,13 @@ body {
   display: flex;
   flex-direction: column;
   line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 /* Verbesserte Link-Zugänglichkeit */
@@ -1198,10 +1202,10 @@ textarea {
     transition-duration: 0.01ms !important;
   }
   
-.chip-dot,
-.image-label-dot {
-  animation: none;
-}
+  .chip-dot,
+  .image-label-dot {
+    animation: none;
+  }
 }
 
 /* Filter bar */
@@ -1509,9 +1513,7 @@ textarea {
 
 /* Dark mode support (optional) */
 @media (prefers-color-scheme: dark) {
-  /* Aktiviere Dark Mode nur wenn gewünscht */
-  /* Auskommentiert, da dein Design primär hell ist
-  
+  /* Aktiviere Dark Mode nur wenn gewünscht
   :root {
     --bf-bg: #1a1a1a;
     --card-bg: #2d2d2d;
