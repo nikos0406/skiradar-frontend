@@ -131,79 +131,75 @@ export function ResortList({ resorts }: Props) {
               <option value="wind">Wind</option>
             </select>
           </div>
+
+          {hasFilterOptions ? (
+            <button
+              type="button"
+              className="filters-toggle-button"
+              onClick={() => setShowFilters((open) => !open)}
+              aria-expanded={showFilters}
+              aria-controls="filter-options"
+            >
+              <span>{showFilters ? "Filter ausblenden" : "Filter anzeigen"}</span>
+              <span className={`filters-toggle-icon ${showFilters ? "open" : ""}`} aria-hidden>
+                ▾
+              </span>
+            </button>
+          ) : null}
         </div>
 
-        {hasFilterOptions ? (
-          <>
-            <div className="filters-toggle">
-              <button
-                type="button"
-                className="filters-toggle-button"
-                onClick={() => setShowFilters((open) => !open)}
-                aria-expanded={showFilters}
-                aria-controls="filter-options"
-              >
-                <span>{showFilters ? "Filter ausblenden" : "Filter anzeigen"}</span>
-                <span className={`filters-toggle-icon ${showFilters ? "open" : ""}`} aria-hidden>
-                  ▾
-                </span>
-              </button>
-            </div>
-
-            {showFilters ? (
-              <div className="filters-chips" id="filter-options">
-                {states.length > 0 ? (
-                  <div className="chip-group">
-                    <div className="chip-group-label">Bundesland/Kanton</div>
-                    <div className="chip-row">
-                      <button
-                        className={`chip ${!stateFilter ? "chip-active" : ""}`}
-                        type="button"
-                        onClick={() => setStateFilter("")}
-                      >
-                        Alle
-                      </button>
-                      {states.map((state) => (
-                        <button
-                          key={state}
-                          className={`chip ${stateFilter === state ? "chip-active" : ""}`}
-                          type="button"
-                          onClick={() => setStateFilter(state)}
-                        >
-                          {state}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {countries.length > 0 ? (
-                  <div className="chip-group">
-                    <div className="chip-group-label">Land</div>
-                    <div className="chip-row">
-                      <button
-                        className={`chip ${!countryFilter ? "chip-active" : ""}`}
-                        type="button"
-                        onClick={() => setCountryFilter("")}
-                      >
-                        Alle Länder
-                      </button>
-                      {countries.map((country) => (
-                        <button
-                          key={country}
-                          className={`chip ${countryFilter === country ? "chip-active" : ""}`}
-                          type="button"
-                          onClick={() => setCountryFilter(country)}
-                        >
-                          {country}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
+        {hasFilterOptions && showFilters ? (
+          <div className="filters-chips" id="filter-options">
+            {states.length > 0 ? (
+              <div className="chip-group">
+                <div className="chip-group-label">Bundesland/Kanton</div>
+                <div className="chip-row">
+                  <button
+                    className={`chip ${!stateFilter ? "chip-active" : ""}`}
+                    type="button"
+                    onClick={() => setStateFilter("")}
+                  >
+                    Alle
+                  </button>
+                  {states.map((state) => (
+                    <button
+                      key={state}
+                      className={`chip ${stateFilter === state ? "chip-active" : ""}`}
+                      type="button"
+                      onClick={() => setStateFilter(state)}
+                    >
+                      {state}
+                    </button>
+                  ))}
+                </div>
               </div>
             ) : null}
-          </>
+
+            {countries.length > 0 ? (
+              <div className="chip-group">
+                <div className="chip-group-label">Land</div>
+                <div className="chip-row">
+                  <button
+                    className={`chip ${!countryFilter ? "chip-active" : ""}`}
+                    type="button"
+                    onClick={() => setCountryFilter("")}
+                  >
+                    Alle Länder
+                  </button>
+                  {countries.map((country) => (
+                    <button
+                      key={country}
+                      className={`chip ${countryFilter === country ? "chip-active" : ""}`}
+                      type="button"
+                      onClick={() => setCountryFilter(country)}
+                    >
+                      {country}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
         ) : null}
       </div>
 
