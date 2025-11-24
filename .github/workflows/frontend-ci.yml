@@ -129,7 +129,7 @@ jobs:
           envs: GHCR_TOKEN
           script: |
             echo "[CI] Starting frontend PROD deploy..."
-            ~/skiradar-frontend/prod/deploy-prod.sh
+            ~/skiradar-server/skiradar-frontend/prod/deploy-prod.sh
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
@@ -150,6 +150,6 @@ jobs:
           envs: GHCR_TOKEN
           script: |
             echo "[CI] Starting frontend DEV deploy..."
-            ~/skiradar-frontend/dev/deploy-dev.sh
+            ~/skiradar-server/skiradar-frontend/dev/deploy-dev.sh
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
