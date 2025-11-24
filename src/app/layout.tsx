@@ -15,11 +15,11 @@ export default function RootLayout({
   return (
     <html lang="de">
       <head>
-        <script
-          defer
-          data-domain="192.168.0.10"
-          src="http://localhost:8081/js/script.js"
-        ></script>
+      <script
+        defer
+        data-domain="192.168.0.10"
+        src="http://192.168.0.10:8081/js/script.js"
+      ></script>
       </head>
       <body>{children}</body>
     </html>
