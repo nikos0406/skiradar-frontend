@@ -1,0 +1,155 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/*'
+      - 'bugfix/*'
+      - 'hotfix/*'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: |
+          if npm run | grep -q "lint"; then
+            npm run lint
+          else
+            echo "No lint script, skipping."
+          fi
+
+      - name: Test
+        run: |
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test script, skipping."
+          fi
+
+  build-and-push:
+    name: Build & Push Docker image
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/skiradar-frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & tag Docker image
+        env:
+          NEXT_PUBLIC_API_BASE_URL_DEV: ${{ secrets.NEXT_PUBLIC_API_BASE_URL_DEV }}
+          NEXT_PUBLIC_API_BASE_URL_PROD: ${{ secrets.NEXT_PUBLIC_API_BASE_URL_PROD }}
+        run: |
+          BRANCH_NAME="${GITHUB_REF##*/}"
+
+          if [ "$BRANCH_NAME" = "develop" ]; then
+            API_BASE="${NEXT_PUBLIC_API_BASE_URL_DEV}"
+          else
+            # main (oder alles andere) -> Prod-URL
+            API_BASE="${NEXT_PUBLIC_API_BASE_URL_PROD}"
+          fi
+
+          echo "Building frontend image for branch: $BRANCH_NAME"
+          echo "Using NEXT_PUBLIC_API_BASE_URL=${API_BASE}"
+
+          docker build \
+            --build-arg NEXT_PUBLIC_API_BASE_URL="${API_BASE}" \
+            -t "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}" .
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            docker tag "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}" "${IMAGE_NAME}:latest"
+          elif [ "$BRANCH_NAME" = "develop" ]; then
+            docker tag "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}" "${IMAGE_NAME}:develop"
+          fi
+
+      - name: Push Docker image
+        run: |
+          BRANCH_NAME="${GITHUB_REF##*/}"
+
+          echo "Pushing frontend image for branch: $BRANCH_NAME"
+
+          docker push "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}"
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            docker push "${IMAGE_NAME}:latest"
+          elif [ "$BRANCH_NAME" = "develop" ]; then
+            docker push "${IMAGE_NAME}:develop"
+          fi
+
+  deploy-prod:
+    name: Deploy Frontend to Production
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy over SSH (prod)
+        uses: appleboy/ssh-action@v1.2.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 20001
+          envs: GHCR_TOKEN
+          script: |
+            echo "[CI] Starting frontend PROD deploy..."
+            ~/skiradar-frontend/prod/deploy-prod.sh
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
+  deploy-dev:
+    name: Deploy Frontend to Develop
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Deploy over SSH (dev)
+        uses: appleboy/ssh-action@v1.2.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 20001
+          envs: GHCR_TOKEN
+          script: |
+            echo "[CI] Starting frontend DEV deploy..."
+            ~/skiradar-frontend/dev/deploy-dev.sh
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
