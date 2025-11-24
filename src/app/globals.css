@@ -1239,7 +1239,6 @@ textarea {
   align-items: center;
   flex: 1 1 220px;
   min-width: 140px;
-  max-width: 460px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
