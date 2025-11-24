@@ -1206,13 +1206,13 @@ textarea {
 
 /* Filter bar */
 .filters-card {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(10px);
-  margin: 14px 0 18px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  backdrop-filter: none;
+  margin: 12px 0 16px;
 }
 
 .filters-header {
@@ -1229,7 +1229,7 @@ textarea {
   align-items: stretch;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 6px 0;
+  padding: 2px 0;
 }
 
 .search-input {
@@ -1240,8 +1240,8 @@ textarea {
   min-width: 160px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: var(--radius-md);
-  padding: 6px 10px;
+  border-radius: 10px;
+  padding: 4px 8px;
   transition: all 0.2s ease;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
@@ -1254,9 +1254,9 @@ textarea {
 
 .search-input input {
   width: 100%;
-  padding: 14px 16px 14px 40px;
+  padding: 12px 14px 12px 38px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: transparent;
   font-size: 15px;
   font-weight: 500;
@@ -1295,9 +1295,9 @@ textarea {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border: 1px solid #e2e8f0;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   background: #f8fafc;
   font-size: 13px;
   color: var(--text-muted);
@@ -1321,7 +1321,7 @@ textarea {
 }
 
 .sort-select select {
-  padding: 10px 32px 10px 12px;
+  padding: 9px 30px 9px 12px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   background: #fff url('data:image/svg+xml;charset=UTF-8,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L6 6.5L11 1.5" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 10px center;
@@ -1349,17 +1349,17 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 14px;
+  padding: 8px 12px;
   flex: 0 1 auto;
-  border-radius: 999px;
-  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
   background: #fff;
   font-size: 13px;
   font-weight: 700;
   color: #334155;
   cursor: pointer;
   transition: all 0.15s ease;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
 }
 
 .filters-toggle-button:hover {
@@ -1451,8 +1451,8 @@ textarea {
 
 @media (max-width: 720px) {
   .filters-card {
-    padding: 16px;
-    border-radius: 14px;
+    padding: 12px;
+    border-radius: 10px;
   }
 
   .filters-row {
@@ -1464,11 +1464,11 @@ textarea {
   .search-input {
     flex: 0 0 auto;
     width: 100%;
-    padding: 2px 6px;
+    padding: 2px 4px;
   }
 
   .search-input input {
-    padding: 8px 12px 8px 36px;
+    padding: 8px 10px 8px 34px;
     font-size: 14px;
     line-height: 1.2;
   }
@@ -1477,7 +1477,7 @@ textarea {
     flex: 0 0 auto;
     width: 100%;
     justify-content: space-between;
-    padding: 10px 12px;
+    padding: 8px 10px;
   }
 
   .filters-toggle-button {
@@ -1486,12 +1486,12 @@ textarea {
   }
 
   .filters-chips {
-    margin-top: 14px;
-    padding-top: 14px;
+    margin-top: 12px;
+    padding-top: 12px;
   }
 
   .filters-toggle-button {
-    padding: 8px 12px;
+    padding: 8px 10px;
     font-size: 12px;
   }
 }
