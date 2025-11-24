@@ -72,14 +72,25 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & tag Docker image
+        env:
+          NEXT_PUBLIC_API_BASE_URL_DEV: ${{ secrets.NEXT_PUBLIC_API_BASE_URL_DEV }}
+          NEXT_PUBLIC_API_BASE_URL_PROD: ${{ secrets.NEXT_PUBLIC_API_BASE_URL_PROD }}
         run: |
           BRANCH_NAME="${GITHUB_REF##*/}"
 
-          echo "Building frontend image for branch: $BRANCH_NAME"
-          echo "Image base name: ${IMAGE_NAME}"
-          echo "Commit SHA: ${GITHUB_SHA}"
+          if [ "$BRANCH_NAME" = "develop" ]; then
+            API_BASE="${NEXT_PUBLIC_API_BASE_URL_DEV}"
+          else
+            # main (oder alles andere) -> Prod-URL
+            API_BASE="${NEXT_PUBLIC_API_BASE_URL_PROD}"
+          fi
 
-          docker build -t "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}" .
+          echo "Building frontend image for branch: $BRANCH_NAME"
+          echo "Using NEXT_PUBLIC_API_BASE_URL=${API_BASE}"
+
+          docker build \
+            --build-arg NEXT_PUBLIC_API_BASE_URL="${API_BASE}" \
+            -t "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}" .
 
           if [ "$BRANCH_NAME" = "main" ]; then
             docker tag "${IMAGE_NAME}:${BRANCH_NAME}-${GITHUB_SHA}" "${IMAGE_NAME}:latest"
@@ -118,7 +129,7 @@ jobs:
           envs: GHCR_TOKEN
           script: |
             echo "[CI] Starting frontend PROD deploy..."
-            ~/skiradar-server/skiradar-frontend/prod/deploy-prod.sh
+            ~/skiradar-frontend/prod/deploy-prod.sh
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
@@ -139,6 +150,6 @@ jobs:
           envs: GHCR_TOKEN
           script: |
             echo "[CI] Starting frontend DEV deploy..."
-            ~/skiradar-server/skiradar-frontend/dev/deploy-dev.sh
+            ~/skiradar-frontend/dev/deploy-dev.sh
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
