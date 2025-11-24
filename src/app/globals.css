@@ -1205,14 +1205,23 @@ textarea {
 }
 
 /* Filter bar */
-/* Filter bar - Improved Layout */
 .filters-card {
-  background: #fff;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: var(--radius-md);
   padding: 20px;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
   margin: 14px 0 18px;
+}
+
+.filters-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .filters-row {
@@ -1221,7 +1230,7 @@ textarea {
   gap: 0;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 6px;
   transition: all 0.2s ease;
 }

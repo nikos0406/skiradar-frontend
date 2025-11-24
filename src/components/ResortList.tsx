@@ -66,7 +66,7 @@ export function ResortList({ resorts }: Props) {
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "temp" | "wind">("name");
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   const states = useMemo(
     () =>
