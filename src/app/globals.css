@@ -1394,8 +1394,11 @@ textarea {
   flex-direction: column;
   gap: 14px;
   margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid #f1f5f9;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
 .chip-group {
@@ -1491,7 +1494,7 @@ textarea {
 
   .filters-chips {
     margin-top: 10px;
-    padding-top: 10px;
+    padding: 12px;
   }
 
   .filters-toggle-button {
