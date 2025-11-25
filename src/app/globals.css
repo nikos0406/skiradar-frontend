@@ -1236,6 +1236,25 @@ textarea {
   padding: 0;
 }
 
+.filters-combo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1 1 320px;
+  min-width: 260px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.filters-divider {
+  width: 1px;
+  align-self: stretch;
+  background: linear-gradient(180deg, rgba(226, 232, 240, 0), rgba(226, 232, 240, 0.8), rgba(226, 232, 240, 0));
+}
+
 .search-input {
   position: relative;
   display: flex;
@@ -1243,17 +1262,17 @@ textarea {
   flex: 1 1 240px;
   min-width: 160px;
   background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 4px 8px;
+  border: none;
+  border-radius: 0;
+  padding: 4px 10px;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: none;
 }
 
 .search-input:focus-within {
   background: #fff;
-  border-color: var(--bf-blue);
-  box-shadow: 0 0 0 3px rgba(27, 109, 181, 0.12);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .search-input input {
@@ -1298,24 +1317,18 @@ textarea {
 .sort-select {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 10px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #fff;
+  gap: 8px;
+  padding: 0 12px 0 10px;
+  background: transparent;
   font-size: 13px;
   color: var(--text-muted);
   white-space: nowrap;
-  flex: 0 1 auto;
-  min-width: 140px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  transition: all 0.15s ease;
+  flex: 0 0 auto;
+  min-width: 150px;
 }
 
 .sort-select:focus-within {
-  background: #fff;
-  border-color: var(--bf-blue);
-  box-shadow: 0 0 0 4px rgba(27, 109, 181, 0.1);
+  background: transparent;
 }
 
 .sort-select label {
@@ -1325,8 +1338,8 @@ textarea {
 }
 
 .sort-select select {
-  padding: 9px 30px 9px 12px;
-  border-radius: 8px;
+  padding: 10px 28px 10px 12px;
+  border-radius: 10px;
   border: 1px solid #e2e8f0;
   background: #fff url('data:image/svg+xml;charset=UTF-8,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L6 6.5L11 1.5" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 10px center;
   background-size: 12px;
@@ -1463,34 +1476,45 @@ textarea {
   }
 
   .filters-row {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
-  .filters-row > * {
-    width: 100%;
-    min-height: 44px;
+  .filters-combo {
+    flex: 1 1 100%;
+    min-width: 0;
+    display: flex;
+    gap: 6px;
+    padding: 4px;
+    overflow: visible;
+  }
+
+  .filters-divider {
+    display: none;
   }
 
   .search-input {
-    flex: 0 0 auto;
+    flex: 1 1 55%;
+    min-width: 0;
     width: 100%;
     padding: 2px 2px;
   }
 
   .search-input input {
-    padding: 8px 10px 8px 34px;
+    padding: 8px 10px 8px 40px;
     font-size: 13.5px;
     line-height: 1.2;
   }
 
   .sort-select {
-    flex: 0 0 auto;
+    flex: 0 0 45%;
+    min-width: 140px;
     width: 100%;
     justify-content: space-between;
     padding: 8px 10px;
-    gap: 8px;
+    gap: 6px;
   }
 
   .sort-select select {
@@ -1499,8 +1523,8 @@ textarea {
   }
 
   .filters-toggle-button {
-    flex: 0 0 auto;
-    width: 100%;
+    flex: 1 1 32%;
+    min-width: 160px;
     justify-content: center;
     padding: 8px 10px;
     font-size: 12.5px;
