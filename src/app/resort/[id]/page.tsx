@@ -32,7 +32,7 @@ export default async function ResortDetail({ params }: Props) {
   return (
     <>
       <SiteHeader title="SkiRadar" subtitle="Details zum Skigebiet" backHref="/" />
-      <div className="page">
+      <main className="page" role="main">
         <div className="detail-shell">
           <div className="detail-breadcrumb">
             <Link href="/">← Zurück zur Übersicht</Link>
@@ -101,7 +101,7 @@ export default async function ResortDetail({ params }: Props) {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

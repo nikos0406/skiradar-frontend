@@ -1536,31 +1536,37 @@ textarea {
 .detail-shell {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .detail-breadcrumb a {
   font-size: 13px;
   color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .detail-banner {
   display: grid;
-  grid-template-columns: 1fr 0.95fr;
-  gap: 12px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 14px;
   align-items: stretch;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 12px;
-  box-shadow: none;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(234, 242, 255, 0.9));
+  border: 1px solid rgba(15, 61, 115, 0.12);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
 }
 
 .detail-banner__media {
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 12px;
   background: #f2f4f7;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .detail-banner__image {
@@ -1576,8 +1582,8 @@ textarea {
 .detail-banner__body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 4px 2px;
+  gap: 10px;
+  padding: 6px 2px;
 }
 
 .detail-kicker {
@@ -1618,19 +1624,19 @@ textarea {
 .detail-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .detail-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 7px 12px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
   border: 1px solid #e2e8f0;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   color: #0f172a;
 }
 
@@ -1659,10 +1665,10 @@ textarea {
 
 .detail-card {
   background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: 10px;
   padding: 12px;
-  box-shadow: none;
+  box-shadow: var(--shadow-soft);
 }
 
 .detail-card__header {
@@ -1687,15 +1693,15 @@ textarea {
 .detail-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .stat {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 10px;
-  background: #fff;
-  box-shadow: none;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: 10px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 252, 255, 0.9));
+  box-shadow: var(--shadow-soft);
 }
 
 .stat-label {
@@ -1777,14 +1783,14 @@ textarea {
 
   .detail-banner {
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
   }
 
   .detail-card {
     padding: 10px;
   }
 
-.detail-banner__image {
+  .detail-banner__image {
     min-height: 180px;
   }
 }
