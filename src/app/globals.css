@@ -1468,6 +1468,11 @@ textarea {
     gap: 10px;
   }
 
+  .filters-row > * {
+    width: 100%;
+    min-height: 44px;
+  }
+
   .search-input {
     flex: 0 0 auto;
     width: 100%;
@@ -1484,22 +1489,26 @@ textarea {
     flex: 0 0 auto;
     width: 100%;
     justify-content: space-between;
-    padding: 6px 8px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .sort-select select {
+    flex: 1;
+    width: 100%;
   }
 
   .filters-toggle-button {
     flex: 0 0 auto;
     width: 100%;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 12.5px;
   }
 
   .filters-chips {
     margin-top: 10px;
     padding: 12px;
-  }
-
-  .filters-toggle-button {
-    padding: 6px 8px;
-    font-size: 12px;
   }
 }
 
