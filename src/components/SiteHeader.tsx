@@ -31,7 +31,7 @@ export function SiteHeader({ title, subtitle, backHref, action }: Props) {
   return (
     <header className={`header ${collapsed ? "header--collapsed" : ""}`}>
       <div className="header-inner">
-        <div className="header-brand">
+        <Link href="/landing" className="header-brand" aria-label="Zur Landingpage">
           <div className="header-logo">
             <Image src="/images/logo.svg" alt="SkiRadar Logo" width={40} height={40} priority />
           </div>
@@ -39,7 +39,7 @@ export function SiteHeader({ title, subtitle, backHref, action }: Props) {
             <div className="header-text-main">{title}</div>
             {subtitle ? <div className="header-text-sub">{subtitle}</div> : null}
           </div>
-        </div>
+        </Link>
 
         <div className="header-right">
           {action}
