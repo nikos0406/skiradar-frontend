@@ -107,29 +107,31 @@ export function ResortList({ resorts }: Props) {
     <>
       <div className="filters-card">
         <div className="filters-row">
-          <div className="search-input">
-            <span className="search-icon" aria-hidden>
-              🔎
-            </span>
-            <input
-              id="search"
-              placeholder="Skigebiet suchen..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="sort-select">
-            <label htmlFor="sort">Sortieren nach</label>
-            <select
-              id="sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            >
-              <option value="name">Name</option>
-              <option value="temp">Temperatur</option>
-              <option value="wind">Wind</option>
-            </select>
+          <div className="filters-combo">
+            <div className="search-input">
+              <span className="search-icon" aria-hidden>
+                🔎
+              </span>
+              <input
+                id="search"
+                placeholder="Skigebiet suchen..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+            <div className="filters-divider" aria-hidden />
+            <div className="sort-select">
+              <label htmlFor="sort">Sortieren</label>
+              <select
+                id="sort"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              >
+                <option value="name">Name</option>
+                <option value="temp">Temperatur</option>
+                <option value="wind">Wind</option>
+              </select>
+            </div>
           </div>
 
           {hasFilterOptions ? (
