@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "SkiRadar",
@@ -21,7 +22,10 @@ export default function RootLayout({
         src="http://192.168.0.10:8081/js/script.js"
       ></script>
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }
