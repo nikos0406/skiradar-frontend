@@ -66,6 +66,7 @@ export function ResortList({ resorts }: Props) {
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "temp" | "wind">("name");
+  const [showFilters, setShowFilters] = useState(false);
 
   const states = useMemo(
     () =>
@@ -100,6 +101,8 @@ export function ResortList({ resorts }: Props) {
     });
   }, [resorts, query, stateFilter, countryFilter, sortBy]);
 
+  const hasFilterOptions = states.length > 0 || countries.length > 0;
+
   return (
     <>
       <div className="filters-card">
@@ -128,10 +131,25 @@ export function ResortList({ resorts }: Props) {
               <option value="wind">Wind</option>
             </select>
           </div>
+
+          {hasFilterOptions ? (
+            <button
+              type="button"
+              className="filters-toggle-button"
+              onClick={() => setShowFilters((open) => !open)}
+              aria-expanded={showFilters}
+              aria-controls="filter-options"
+            >
+              <span>{showFilters ? "Filter ausblenden" : "Filter anzeigen"}</span>
+              <span className={`filters-toggle-icon ${showFilters ? "open" : ""}`} aria-hidden>
+                ▾
+              </span>
+            </button>
+          ) : null}
         </div>
 
-        {states.length > 0 || countries.length > 0 ? (
-          <div className="filters-chips">
+        {hasFilterOptions && showFilters ? (
+          <div className="filters-chips" id="filter-options">
             {states.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Bundesland/Kanton</div>
