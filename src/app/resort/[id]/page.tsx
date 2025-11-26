@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { fetchResorts } from "@/lib/api";
+import { fetchSingleResort } from "@/lib/api";
 import { fallbackImage, formatDate, isFresh } from "@/lib/format";
 import { SkiResort } from "@/types/resort";
 
@@ -10,8 +10,8 @@ async function loadResort(id: string): Promise<SkiResort | null> {
   if (Number.isNaN(parsedId)) return null;
 
   try {
-    const resorts = await fetchResorts(parsedId);
-    return resorts?.[0] ?? null;
+    const resort = await fetchSingleResort(parsedId);
+    return resort ?? null;
   } catch (error) {
     console.error(error);
     return null;

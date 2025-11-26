@@ -41,9 +41,13 @@ async function parseResponse<T>(response: Response): Promise<T> {
   return body as T;
 }
 
-export async function fetchResorts(resortId?: number) {
-  const query = resortId ? `?resort_id=${resortId}` : "";
-  const response = await fetch(buildUrl(`/api/resorts/list${query}`), defaultInit);
+export async function fetchSingleResort(resortId: number) {
+  const response = await fetch(buildUrl(`/api/resorts/${resortId}`), defaultInit);
+  return parseResponse<SkiResort>(response);
+}
+
+export async function fetchResorts() {
+  const response = await fetch(buildUrl(`/api/resorts/list`), defaultInit);
   return parseResponse<SkiResort[]>(response);
 }
 
