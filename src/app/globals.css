@@ -2116,11 +2116,12 @@ textarea {
 }
 
 .pill {
-  padding: 6px 10px;
+  padding: 4px 9px;
   border-radius: var(--radius-full);
   background: #0f3d73;
   color: #eaf2ff;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.1;
 }
 
 .pill--rating {
@@ -2129,6 +2130,7 @@ textarea {
   gap: 6px;
   font-weight: 700;
   border: 1px solid transparent;
+  padding: 4px 9px;
 }
 
 .pill--rating-excellent {

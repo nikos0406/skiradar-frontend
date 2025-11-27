@@ -107,20 +107,6 @@ export default async function ResortDetail({ params }: Props) {
                 {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
               </div>
             </div>
-            <div className="stat">
-              <div className="stat-label">Bedingungen</div>
-              <div className="stat-value stat-value--pill">
-                {weatherRating ? (
-                  <span
-                    className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
-                  >
-                    {formatWeatherRating(resort.weather_rating)}
-                  </span>
-                ) : (
-                  <span className="stat-placeholder">—</span>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </main>

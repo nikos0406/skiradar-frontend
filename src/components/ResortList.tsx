@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { SkiResort, WeatherRating } from "@/types/resort";
+import { SkiResort } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
 import {
   WEATHER_RATING_KEYS,
@@ -86,7 +86,7 @@ export function ResortList({ resorts }: Props) {
   const [query, setQuery] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
-  const [weatherRatingFilter, setWeatherRatingFilter] = useState<WeatherRating | "">("");
+  const [weatherRatingFilter, setWeatherRatingFilter] = useState<(typeof WEATHER_RATING_KEYS)[number] | "">("");
   const [sortBy, setSortBy] = useState<"name" | "temp" | "wind" | "rating">("name");
   const [showFilters, setShowFilters] = useState(false);
 
@@ -107,7 +107,7 @@ export function ResortList({ resorts }: Props) {
   );
 
   const weatherRatings = useMemo(() => {
-    const set = new Set<WeatherRating>();
+    const set = new Set<(typeof WEATHER_RATING_KEYS)[number]>();
     resorts.forEach((resort) => {
       const rating = normalizeWeatherRating(resort.weather_rating);
       if (rating) set.add(rating);
