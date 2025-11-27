@@ -53,14 +53,14 @@ export default async function ResortDetail({ params }: Props) {
               <div className="detail-banner__meta">
                 <div className="pill">Land: <strong>{resort.country ?? "—"}</strong></div>
                 <div className="pill">Bundesland/Kanton: <strong>{resort.state ?? "—"}</strong></div>
+              </div>
+              <div className="detail-badges">
                 <div
                   className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
                   aria-label="Aktuelle Bedingungen"
                 >
                   Bedingungen: <strong>{formatWeatherRating(resort.weather_rating)}</strong>
                 </div>
-              </div>
-              <div className="detail-badges">
                 <span className={`detail-badge ${fresh ? "detail-badge--fresh" : "detail-badge--stale"}`}>
                   {fresh ? "Aktuell (< 1h)" : "Daten älter als 1h"}
                 </span>
