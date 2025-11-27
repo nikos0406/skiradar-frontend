@@ -46,7 +46,6 @@ export default async function ResortDetail({ params }: Props) {
               <div className="detail-banner__meta">
                 <div className="pill">Land: <strong>{resort.country ?? "—"}</strong></div>
                 <div className="pill">Bundesland/Kanton: <strong>{resort.state ?? "—"}</strong></div>
-                <div className="pill">Koordinaten: <strong>{resort.lat ?? "—"}, {resort.lon ?? "—"}</strong></div>
               </div>
               <div className="detail-badges">
                 <span className={`detail-badge ${fresh ? "detail-badge--fresh" : "detail-badge--stale"}`}>
@@ -94,10 +93,6 @@ export default async function ResortDetail({ params }: Props) {
               <div className="stat-value">
                 {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
               </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">Referenzdatum</div>
-              <div className="stat-value">{resort.snow_ref_date ?? "—"}</div>
             </div>
           </div>
         </div>
