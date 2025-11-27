@@ -18,9 +18,6 @@ export default function LandingPage() {
               <Link className="btn-primary" href="/">
                 Zu den Live-Daten
               </Link>
-              <Link className="btn-ghost" href="mailto:support@skiradar.app">
-                Kontakt aufnehmen
-              </Link>
             </div>
             <div className="landing-meta">
               <span>Automatische Updates</span>
@@ -48,7 +45,7 @@ export default function LandingPage() {
               <li>
                 <div>
                   <div className="item-label">Live-Daten abrufen</div>
-                  <div className="item-value">Temp, Wind, Schnee</div>
+                  <div className="item-value">Temperatur, Wind, Schnee</div>
                 </div>
                 <span className="item-badge muted">Automatisch</span>
               </li>
@@ -60,10 +57,6 @@ export default function LandingPage() {
                 <span className="item-badge">Klar</span>
               </li>
             </ul>
-            <div className="landing-card__footer">
-              <span>Keine Werbung, nur Daten</span>
-              <span className="muted">SkiRadar</span>
-            </div>
           </div>
         </section>
 

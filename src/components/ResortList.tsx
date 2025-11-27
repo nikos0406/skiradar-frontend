@@ -55,6 +55,12 @@ function ResortCard({ resort }: { resort: SkiResort }) {
               {resort.snow_new_cm ?? "—"}<span className="units">cm</span>
             </span>
           </div>
+          <div className="row">
+            <span className="row-label">Bedingungen</span>
+            <span className={`row-value ${resort.weather_rating == null ? "row-value-muted" : ""}`}>
+              {resort.weather_rating ?? "—"}
+            </span>
+          </div>
         </div>
       </div>
     </Link>

@@ -14,4 +14,5 @@ export type SkiResort = {
   snow_new_cm?: number | null;
   snow_ref_date?: string | null;
   last_update?: string | null;
+  weather_rating?: string | null;
 };
