@@ -2,10 +2,46 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { SkiResort } from "@/types/resort";
+import { SkiResort, WeatherRating } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
 
 type Props = { resorts: SkiResort[] };
+
+const WEATHER_RATING_LABELS: Record<WeatherRating, string> = {
+  EXCELLENT: "Sehr gut",
+  GOOD: "Gut",
+  MODERATE: "Mittel",
+  POOR: "Schlecht",
+};
+
+const WEATHER_RATING_LABEL_FROM_TEXT: Record<string, WeatherRating> = Object.entries(
+  WEATHER_RATING_LABELS,
+).reduce((acc, [rating, label]) => {
+  acc[label.toLowerCase()] = rating as WeatherRating;
+  return acc;
+}, {} as Record<string, WeatherRating>);
+
+const WEATHER_RATING_ORDER: Record<WeatherRating, number> = {
+  EXCELLENT: 3,
+  GOOD: 2,
+  MODERATE: 1,
+  POOR: 0,
+};
+
+function normalizeWeatherRating(value?: WeatherRating | string | null): WeatherRating | null {
+  if (!value) return null;
+  const normalized = String(value).trim();
+  const byCode = normalized.toUpperCase() as WeatherRating;
+  if (byCode in WEATHER_RATING_LABELS) return byCode;
+  const byLabel = WEATHER_RATING_LABEL_FROM_TEXT[normalized.toLowerCase()];
+  return byLabel ?? null;
+}
+
+function formatWeatherRating(value?: WeatherRating | string | null) {
+  const normalized = normalizeWeatherRating(value);
+  if (!normalized) return value ?? "—";
+  return WEATHER_RATING_LABELS[normalized];
+}
 
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
@@ -58,7 +94,7 @@ function ResortCard({ resort }: { resort: SkiResort }) {
           <div className="row">
             <span className="row-label">Bedingungen</span>
             <span className={`row-value ${resort.weather_rating == null ? "row-value-muted" : ""}`}>
-              {resort.weather_rating ?? "—"}
+              {formatWeatherRating(resort.weather_rating)}
             </span>
           </div>
         </div>
@@ -71,7 +107,8 @@ export function ResortList({ resorts }: Props) {
   const [query, setQuery] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "temp" | "wind">("name");
+  const [weatherRatingFilter, setWeatherRatingFilter] = useState<WeatherRating | "">("");
+  const [sortBy, setSortBy] = useState<"name" | "temp" | "wind" | "rating">("name");
   const [showFilters, setShowFilters] = useState(false);
 
   const states = useMemo(
@@ -90,24 +127,44 @@ export function ResortList({ resorts }: Props) {
     [resorts],
   );
 
+  const weatherRatings = useMemo(() => {
+    const set = new Set<WeatherRating>();
+    resorts.forEach((resort) => {
+      const rating = normalizeWeatherRating(resort.weather_rating);
+      if (rating) set.add(rating);
+    });
+    return (Object.keys(WEATHER_RATING_LABELS) as WeatherRating[]).filter((rating) =>
+      set.has(rating),
+    );
+  }, [resorts]);
+
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
     const base = resorts.filter((resort) => {
       const matchesName = term ? resort.name.toLowerCase().includes(term) : true;
       const matchesState = stateFilter ? resort.state === stateFilter : true;
       const matchesCountry = countryFilter ? resort.country === countryFilter : true;
-      return matchesName && matchesState && matchesCountry;
+      const normalizedRating = normalizeWeatherRating(resort.weather_rating);
+      const matchesRating = weatherRatingFilter ? normalizedRating === weatherRatingFilter : true;
+      return matchesName && matchesState && matchesCountry && matchesRating;
     });
 
     return [...base].sort((a, b) => {
       if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "temp") return (b.temp_c ?? -Infinity) - (a.temp_c ?? -Infinity);
       if (sortBy === "wind") return (b.wind_kmh ?? -Infinity) - (a.wind_kmh ?? -Infinity);
+      if (sortBy === "rating") {
+        const aRating = normalizeWeatherRating(a.weather_rating);
+        const bRating = normalizeWeatherRating(b.weather_rating);
+        const aScore = aRating ? WEATHER_RATING_ORDER[aRating] : -Infinity;
+        const bScore = bRating ? WEATHER_RATING_ORDER[bRating] : -Infinity;
+        return bScore - aScore;
+      }
       return 0;
     });
-  }, [resorts, query, stateFilter, countryFilter, sortBy]);
+  }, [resorts, query, stateFilter, countryFilter, weatherRatingFilter, sortBy]);
 
-  const hasFilterOptions = states.length > 0 || countries.length > 0;
+  const hasFilterOptions = states.length > 0 || countries.length > 0 || weatherRatings.length > 0;
 
   return (
     <>
@@ -136,6 +193,7 @@ export function ResortList({ resorts }: Props) {
                 <option value="name">Name</option>
                 <option value="temp">Temperatur</option>
                 <option value="wind">Wind</option>
+                <option value="rating">Bedingungen</option>
               </select>
             </div>
           </div>
@@ -177,6 +235,31 @@ export function ResortList({ resorts }: Props) {
                       onClick={() => setStateFilter(state)}
                     >
                       {state}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {weatherRatings.length > 0 ? (
+              <div className="chip-group">
+                <div className="chip-group-label">Bedingungen</div>
+                <div className="chip-row">
+                  <button
+                    className={`chip ${!weatherRatingFilter ? "chip-active" : ""}`}
+                    type="button"
+                    onClick={() => setWeatherRatingFilter("")}
+                  >
+                    Alle
+                  </button>
+                  {weatherRatings.map((rating) => (
+                    <button
+                      key={rating}
+                      className={`chip ${weatherRatingFilter === rating ? "chip-active" : ""}`}
+                      type="button"
+                      onClick={() => setWeatherRatingFilter(rating)}
+                    >
+                      {WEATHER_RATING_LABELS[rating]}
                     </button>
                   ))}
                 </div>
