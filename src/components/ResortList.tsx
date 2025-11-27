@@ -4,12 +4,21 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SkiResort } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
+import {
+  WEATHER_RATING_KEYS,
+  WEATHER_RATING_LABELS,
+  formatWeatherRating,
+  normalizeWeatherRating,
+  weatherRatingClassSuffix,
+  weatherRatingScore,
+} from "@/lib/weatherRating";
 
 type Props = { resorts: SkiResort[] };
 
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
   const targetUrl = resort.id != null ? `/resort/${resort.id}` : "/resort";
+  const rating = normalizeWeatherRating(resort.weather_rating);
 
   return (
     <Link href={targetUrl} className="card" prefetch>
@@ -55,6 +64,18 @@ function ResortCard({ resort }: { resort: SkiResort }) {
               {resort.snow_new_cm ?? "—"}<span className="units">cm</span>
             </span>
           </div>
+          <div className="row">
+            <span className="row-label">Bedingungen</span>
+            <span className="row-value">
+              {rating ? (
+                <span className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(rating)}`}>
+                  {formatWeatherRating(resort.weather_rating)}
+                </span>
+              ) : (
+                <span className="row-value-muted">—</span>
+              )}
+            </span>
+          </div>
         </div>
       </div>
     </Link>
@@ -65,7 +86,8 @@ export function ResortList({ resorts }: Props) {
   const [query, setQuery] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "temp" | "wind">("name");
+  const [weatherRatingFilter, setWeatherRatingFilter] = useState<(typeof WEATHER_RATING_KEYS)[number] | "">("");
+  const [sortBy, setSortBy] = useState<"name" | "temp" | "wind" | "rating">("name");
   const [showFilters, setShowFilters] = useState(false);
 
   const states = useMemo(
@@ -84,24 +106,38 @@ export function ResortList({ resorts }: Props) {
     [resorts],
   );
 
+  const weatherRatings = useMemo(() => {
+    const set = new Set<(typeof WEATHER_RATING_KEYS)[number]>();
+    resorts.forEach((resort) => {
+      const rating = normalizeWeatherRating(resort.weather_rating);
+      if (rating) set.add(rating);
+    });
+    return WEATHER_RATING_KEYS.filter((rating) => set.has(rating));
+  }, [resorts]);
+
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
     const base = resorts.filter((resort) => {
       const matchesName = term ? resort.name.toLowerCase().includes(term) : true;
       const matchesState = stateFilter ? resort.state === stateFilter : true;
       const matchesCountry = countryFilter ? resort.country === countryFilter : true;
-      return matchesName && matchesState && matchesCountry;
+      const normalizedRating = normalizeWeatherRating(resort.weather_rating);
+      const matchesRating = weatherRatingFilter ? normalizedRating === weatherRatingFilter : true;
+      return matchesName && matchesState && matchesCountry && matchesRating;
     });
 
     return [...base].sort((a, b) => {
       if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "temp") return (b.temp_c ?? -Infinity) - (a.temp_c ?? -Infinity);
       if (sortBy === "wind") return (b.wind_kmh ?? -Infinity) - (a.wind_kmh ?? -Infinity);
+      if (sortBy === "rating") {
+        return weatherRatingScore(b.weather_rating) - weatherRatingScore(a.weather_rating);
+      }
       return 0;
     });
-  }, [resorts, query, stateFilter, countryFilter, sortBy]);
+  }, [resorts, query, stateFilter, countryFilter, weatherRatingFilter, sortBy]);
 
-  const hasFilterOptions = states.length > 0 || countries.length > 0;
+  const hasFilterOptions = states.length > 0 || countries.length > 0 || weatherRatings.length > 0;
 
   return (
     <>
@@ -130,6 +166,7 @@ export function ResortList({ resorts }: Props) {
                 <option value="name">Name</option>
                 <option value="temp">Temperatur</option>
                 <option value="wind">Wind</option>
+                <option value="rating">Bedingungen</option>
               </select>
             </div>
           </div>
@@ -152,6 +189,31 @@ export function ResortList({ resorts }: Props) {
 
         {hasFilterOptions && showFilters ? (
           <div className="filters-chips" id="filter-options">
+                        {countries.length > 0 ? (
+              <div className="chip-group">
+                <div className="chip-group-label">Land</div>
+                <div className="chip-row">
+                  <button
+                    className={`chip ${!countryFilter ? "chip-active" : ""}`}
+                    type="button"
+                    onClick={() => setCountryFilter("")}
+                  >
+                    Alle Länder
+                  </button>
+                  {countries.map((country) => (
+                    <button
+                      key={country}
+                      className={`chip ${countryFilter === country ? "chip-active" : ""}`}
+                      type="button"
+                      onClick={() => setCountryFilter(country)}
+                    >
+                      {country}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            
             {states.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Bundesland/Kanton</div>
@@ -177,25 +239,25 @@ export function ResortList({ resorts }: Props) {
               </div>
             ) : null}
 
-            {countries.length > 0 ? (
+            {weatherRatings.length > 0 ? (
               <div className="chip-group">
-                <div className="chip-group-label">Land</div>
+                <div className="chip-group-label">Bedingungen</div>
                 <div className="chip-row">
                   <button
-                    className={`chip ${!countryFilter ? "chip-active" : ""}`}
+                    className={`chip ${!weatherRatingFilter ? "chip-active" : ""}`}
                     type="button"
-                    onClick={() => setCountryFilter("")}
+                    onClick={() => setWeatherRatingFilter("")}
                   >
-                    Alle Länder
+                    Alle
                   </button>
-                  {countries.map((country) => (
+                  {weatherRatings.map((rating) => (
                     <button
-                      key={country}
-                      className={`chip ${countryFilter === country ? "chip-active" : ""}`}
+                      key={rating}
+                      className={`chip ${weatherRatingFilter === rating ? "chip-active" : ""}`}
                       type="button"
-                      onClick={() => setCountryFilter(country)}
+                      onClick={() => setWeatherRatingFilter(rating)}
                     >
-                      {country}
+                      {WEATHER_RATING_LABELS[rating]}
                     </button>
                   ))}
                 </div>

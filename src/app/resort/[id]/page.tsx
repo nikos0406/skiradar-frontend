@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { fetchResorts } from "@/lib/api";
+import { fetchSingleResort } from "@/lib/api";
 import { fallbackImage, formatDate, isFresh } from "@/lib/format";
+import {
+  formatWeatherRating,
+  normalizeWeatherRating,
+  weatherRatingClassSuffix,
+} from "@/lib/weatherRating";
 import { SkiResort } from "@/types/resort";
 
 async function loadResort(id: string): Promise<SkiResort | null> {
@@ -10,8 +15,8 @@ async function loadResort(id: string): Promise<SkiResort | null> {
   if (Number.isNaN(parsedId)) return null;
 
   try {
-    const resorts = await fetchResorts(parsedId);
-    return resorts?.[0] ?? null;
+    const resort = await fetchSingleResort(parsedId);
+    return resort ?? null;
   } catch (error) {
     console.error(error);
     return null;
@@ -28,6 +33,8 @@ export default async function ResortDetail({ params }: Props) {
   if (!resort) {
     notFound();
   }
+
+  const weatherRating = normalizeWeatherRating(resort.weather_rating);
 
   return (
     <>
@@ -46,7 +53,12 @@ export default async function ResortDetail({ params }: Props) {
               <div className="detail-banner__meta">
                 <div className="pill">Land: <strong>{resort.country ?? "—"}</strong></div>
                 <div className="pill">Bundesland/Kanton: <strong>{resort.state ?? "—"}</strong></div>
-                <div className="pill">Koordinaten: <strong>{resort.lat ?? "—"}, {resort.lon ?? "—"}</strong></div>
+                <div
+                  className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
+                  aria-label="Aktuelle Bedingungen"
+                >
+                  Bedingungen: <strong>{formatWeatherRating(resort.weather_rating)}</strong>
+                </div>
               </div>
               <div className="detail-badges">
                 <span className={`detail-badge ${fresh ? "detail-badge--fresh" : "detail-badge--stale"}`}>
@@ -94,10 +106,6 @@ export default async function ResortDetail({ params }: Props) {
               <div className="stat-value">
                 {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
               </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">Referenzdatum</div>
-              <div className="stat-value">{resort.snow_ref_date ?? "—"}</div>
             </div>
           </div>
         </div>
