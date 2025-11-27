@@ -1751,6 +1751,16 @@ textarea {
   gap: 4px;
 }
 
+.stat-value--pill {
+  align-items: center;
+  min-height: 24px;
+}
+
+.stat-placeholder {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 .stat-value .unit {
   font-size: 12px;
   color: var(--text-muted);
@@ -2111,6 +2121,45 @@ textarea {
   background: #0f3d73;
   color: #eaf2ff;
   font-size: 12px;
+}
+
+.pill--rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.pill--rating-excellent {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.pill--rating-good {
+  background: #e0f2fe;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.pill--rating-moderate {
+  background: #fef9c3;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.pill--rating-poor {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecdd3;
+}
+
+.pill--rating-muted {
+  background: #e5e7eb;
+  color: #475569;
+  border-color: #cbd5e1;
+  font-weight: 600;
 }
 
 .landing-grid {

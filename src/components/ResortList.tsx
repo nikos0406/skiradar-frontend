@@ -4,48 +4,21 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SkiResort, WeatherRating } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
+import {
+  WEATHER_RATING_KEYS,
+  WEATHER_RATING_LABELS,
+  formatWeatherRating,
+  normalizeWeatherRating,
+  weatherRatingClassSuffix,
+  weatherRatingScore,
+} from "@/lib/weatherRating";
 
 type Props = { resorts: SkiResort[] };
-
-const WEATHER_RATING_LABELS: Record<WeatherRating, string> = {
-  EXCELLENT: "Sehr gut",
-  GOOD: "Gut",
-  MODERATE: "Mittel",
-  POOR: "Schlecht",
-};
-
-const WEATHER_RATING_LABEL_FROM_TEXT: Record<string, WeatherRating> = Object.entries(
-  WEATHER_RATING_LABELS,
-).reduce((acc, [rating, label]) => {
-  acc[label.toLowerCase()] = rating as WeatherRating;
-  return acc;
-}, {} as Record<string, WeatherRating>);
-
-const WEATHER_RATING_ORDER: Record<WeatherRating, number> = {
-  EXCELLENT: 3,
-  GOOD: 2,
-  MODERATE: 1,
-  POOR: 0,
-};
-
-function normalizeWeatherRating(value?: WeatherRating | string | null): WeatherRating | null {
-  if (!value) return null;
-  const normalized = String(value).trim();
-  const byCode = normalized.toUpperCase() as WeatherRating;
-  if (byCode in WEATHER_RATING_LABELS) return byCode;
-  const byLabel = WEATHER_RATING_LABEL_FROM_TEXT[normalized.toLowerCase()];
-  return byLabel ?? null;
-}
-
-function formatWeatherRating(value?: WeatherRating | string | null) {
-  const normalized = normalizeWeatherRating(value);
-  if (!normalized) return value ?? "—";
-  return WEATHER_RATING_LABELS[normalized];
-}
 
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
   const targetUrl = resort.id != null ? `/resort/${resort.id}` : "/resort";
+  const rating = normalizeWeatherRating(resort.weather_rating);
 
   return (
     <Link href={targetUrl} className="card" prefetch>
@@ -93,8 +66,14 @@ function ResortCard({ resort }: { resort: SkiResort }) {
           </div>
           <div className="row">
             <span className="row-label">Bedingungen</span>
-            <span className={`row-value ${resort.weather_rating == null ? "row-value-muted" : ""}`}>
-              {formatWeatherRating(resort.weather_rating)}
+            <span className="row-value">
+              {rating ? (
+                <span className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(rating)}`}>
+                  {formatWeatherRating(resort.weather_rating)}
+                </span>
+              ) : (
+                <span className="row-value-muted">—</span>
+              )}
             </span>
           </div>
         </div>
@@ -133,9 +112,7 @@ export function ResortList({ resorts }: Props) {
       const rating = normalizeWeatherRating(resort.weather_rating);
       if (rating) set.add(rating);
     });
-    return (Object.keys(WEATHER_RATING_LABELS) as WeatherRating[]).filter((rating) =>
-      set.has(rating),
-    );
+    return WEATHER_RATING_KEYS.filter((rating) => set.has(rating));
   }, [resorts]);
 
   const filtered = useMemo(() => {
@@ -154,11 +131,7 @@ export function ResortList({ resorts }: Props) {
       if (sortBy === "temp") return (b.temp_c ?? -Infinity) - (a.temp_c ?? -Infinity);
       if (sortBy === "wind") return (b.wind_kmh ?? -Infinity) - (a.wind_kmh ?? -Infinity);
       if (sortBy === "rating") {
-        const aRating = normalizeWeatherRating(a.weather_rating);
-        const bRating = normalizeWeatherRating(b.weather_rating);
-        const aScore = aRating ? WEATHER_RATING_ORDER[aRating] : -Infinity;
-        const bScore = bRating ? WEATHER_RATING_ORDER[bRating] : -Infinity;
-        return bScore - aScore;
+        return weatherRatingScore(b.weather_rating) - weatherRatingScore(a.weather_rating);
       }
       return 0;
     });
@@ -216,6 +189,31 @@ export function ResortList({ resorts }: Props) {
 
         {hasFilterOptions && showFilters ? (
           <div className="filters-chips" id="filter-options">
+                        {countries.length > 0 ? (
+              <div className="chip-group">
+                <div className="chip-group-label">Land</div>
+                <div className="chip-row">
+                  <button
+                    className={`chip ${!countryFilter ? "chip-active" : ""}`}
+                    type="button"
+                    onClick={() => setCountryFilter("")}
+                  >
+                    Alle Länder
+                  </button>
+                  {countries.map((country) => (
+                    <button
+                      key={country}
+                      className={`chip ${countryFilter === country ? "chip-active" : ""}`}
+                      type="button"
+                      onClick={() => setCountryFilter(country)}
+                    >
+                      {country}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            
             {states.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Bundesland/Kanton</div>
@@ -260,31 +258,6 @@ export function ResortList({ resorts }: Props) {
                       onClick={() => setWeatherRatingFilter(rating)}
                     >
                       {WEATHER_RATING_LABELS[rating]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            {countries.length > 0 ? (
-              <div className="chip-group">
-                <div className="chip-group-label">Land</div>
-                <div className="chip-row">
-                  <button
-                    className={`chip ${!countryFilter ? "chip-active" : ""}`}
-                    type="button"
-                    onClick={() => setCountryFilter("")}
-                  >
-                    Alle Länder
-                  </button>
-                  {countries.map((country) => (
-                    <button
-                      key={country}
-                      className={`chip ${countryFilter === country ? "chip-active" : ""}`}
-                      type="button"
-                      onClick={() => setCountryFilter(country)}
-                    >
-                      {country}
                     </button>
                   ))}
                 </div>
