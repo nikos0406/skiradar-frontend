@@ -115,28 +115,28 @@ export default function UpdateResortPage() {
 
             <div className="form-group">
               <label htmlFor="id">Ausgewählte ID</label>
-              <input id="id" value={selected?.id ?? ""} readOnly placeholder="Bitte Skigebiet wählen" />
+              <input id="id" type="text" value={selected?.id ?? ""} readOnly placeholder="Bitte Skigebiet wählen" />
             </div>
 
             <div className="form-group">
               <label htmlFor="name">Neuer Name (optional)</label>
-              <input id="name" name="name" defaultValue={selected?.name ?? ""} />
+              <input id="name" type="text" name="name" defaultValue={selected?.name ?? ""} />
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="lat">Breitengrad (optional)</label>
-                <input id="lat" name="lat" defaultValue={selected?.lat ?? ""} />
+                <input id="lat" type="text" name="lat" defaultValue={selected?.lat ?? ""} />
               </div>
               <div className="form-group">
                 <label htmlFor="lon">Längengrad (optional)</label>
-                <input id="lon" name="lon" defaultValue={selected?.lon ?? ""} />
+                <input id="lon" type="text" name="lon" defaultValue={selected?.lon ?? ""} />
               </div>
             </div>
 
             <div className="form-group">
               <label htmlFor="image_url">Bild / Webcam URL (optional)</label>
-              <input id="image_url" name="image_url" defaultValue={selected?.image_url ?? ""} />
+              <input id="image_url" type="text" name="image_url" defaultValue={selected?.image_url ?? ""} />
             </div>
 
             <button className="btn" type="submit" disabled={loading || !authorized}>
@@ -149,6 +149,7 @@ export default function UpdateResortPage() {
             <label htmlFor="resortSearch">Suche nach Name</label>
             <input
               id="resortSearch"
+              type="text"
               placeholder="z. B. Ischgl"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
