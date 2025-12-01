@@ -1,3 +1,4 @@
+import { WeatherForecast } from "@/types/forecast";
 import { SkiResort } from "@/types/resort";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(
@@ -44,6 +45,11 @@ async function parseResponse<T>(response: Response): Promise<T> {
 export async function fetchSingleResort(resortId: number) {
   const response = await fetch(buildUrl(`/api/resorts/${resortId}`), defaultInit);
   return parseResponse<SkiResort>(response);
+}
+
+export async function fetchSingleResortForecast(resortId: number) {
+  const response = await fetch(buildUrl(`/api/resorts/${resortId}/forecast`), defaultInit);
+  return parseResponse<WeatherForecast[]>(response);
 }
 
 export async function fetchResorts() {
