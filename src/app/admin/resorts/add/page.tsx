@@ -70,6 +70,7 @@ export default function AddResortPage() {
               <label htmlFor="name">Skigebiet Name *</label>
               <input
                 id="name"
+                type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="z. B. St. Anton"
@@ -81,6 +82,7 @@ export default function AddResortPage() {
               <label htmlFor="image">Bild / Webcam URL</label>
               <input
                 id="image"
+                type="text"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://…"

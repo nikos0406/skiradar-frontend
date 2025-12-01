@@ -1585,11 +1585,11 @@ textarea {
   grid-template-columns: 1.05fr 0.95fr;
   gap: 14px;
   align-items: stretch;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(234, 242, 255, 0.9));
-  border: 1px solid rgba(15, 61, 115, 0.12);
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
   padding: 14px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
   overflow: hidden;
 }
 
@@ -1597,9 +1597,8 @@ textarea {
   position: relative;
   overflow: hidden;
   border-radius: 12px;
-  background: #f2f4f7;
-  border: 1px solid rgba(226, 232, 240, 0.7);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: var(--input-bg);
+  border: 1px solid var(--border-light);
 }
 
 .detail-banner__image {
@@ -1624,7 +1623,7 @@ textarea {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .detail-title {
@@ -1636,7 +1635,7 @@ textarea {
 
 .detail-lede {
   margin: 0;
-  color: #475569;
+  color: #334155;
   line-height: 1.5;
 }
 
@@ -1646,7 +1645,7 @@ textarea {
   gap: 8px;
   align-items: center;
   font-size: 13px;
-  color: #475569;
+  color: var(--text-muted);
 }
 
 .detail-dot {
@@ -1668,19 +1667,19 @@ textarea {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  border: 1px solid #e2e8f0;
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-light);
+  background: var(--input-bg);
   color: #0f172a;
 }
 
 .detail-badge--fresh {
-  border-color: rgba(22, 163, 74, 0.25);
-  background: #ecfdf3;
+  border-color: rgba(21, 128, 61, 0.2);
+  background: #f0fdf4;
   color: #166534;
 }
 
 .detail-badge--stale {
-  border-color: rgba(217, 119, 6, 0.25);
+  border-color: rgba(217, 119, 6, 0.2);
   background: #fff7ed;
   color: #b45309;
 }
@@ -1697,11 +1696,11 @@ textarea {
 }
 
 .detail-card {
-  background: #fff;
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
   border-radius: 10px;
   padding: 12px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
 
 .detail-card__header {
@@ -1729,12 +1728,71 @@ textarea {
   gap: 12px;
 }
 
+.detail-stats-grid--inline {
+  margin-top: 14px;
+}
+
+.detail-forecast {
+  margin-top: 14px;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.forecast-tile {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.forecast-date {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.forecast-description {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.forecast-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  font-size: 12px;
+}
+
+.forecast-metrics .label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.forecast-metrics strong {
+  display: block;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.forecast-run {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 .stat {
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  border: 1px solid var(--border-light);
   border-radius: 10px;
   padding: 12px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 252, 255, 0.9));
-  box-shadow: var(--shadow-soft);
+  background: var(--card-bg);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
 }
 
 .stat-label {
