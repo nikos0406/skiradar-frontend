@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
-import { fallbackImage, formatDate, isFresh } from "@/lib/format";
+import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
 import {
   formatWeatherRating,
   normalizeWeatherRating,
@@ -137,7 +137,7 @@ export default async function ResortDetail({ params }: Props) {
               ) : (
                 forecast.map((day) => (
                   <div key={day.id} className="forecast-tile">
-                    <div className="forecast-date">{formatDate(day.forecast_date)}</div>
+                    <div className="forecast-date">{formatForecastDate(day.forecast_date)}</div>
                     <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
                     <div className="forecast-metrics">
                       <div>
@@ -161,7 +161,6 @@ export default async function ResortDetail({ params }: Props) {
                         <strong>{day.precipitation_mm ?? "?"} mm</strong>
                       </div>
                     </div>
-                    <div className="forecast-run">Lauf: {formatDate(day.forecast_run)}</div>
                   </div>
                 ))
               )}
