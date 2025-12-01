@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { fetchSingleResort } from "@/lib/api";
+import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, isFresh } from "@/lib/format";
 import {
   formatWeatherRating,
@@ -9,6 +9,7 @@ import {
   weatherRatingClassSuffix,
 } from "@/lib/weatherRating";
 import { SkiResort } from "@/types/resort";
+import { WeatherForecast } from "@/types/forecast";
 
 async function loadResort(id: string): Promise<SkiResort | null> {
   const parsedId = Number(id);
@@ -23,17 +24,30 @@ async function loadResort(id: string): Promise<SkiResort | null> {
   }
 }
 
+async function loadResortForecast(id: string): Promise<WeatherForecast[]> {
+  const parsedId = Number(id);
+  if (Number.isNaN(parsedId)) return [];
+
+  try {
+    const forecast = await fetchSingleResortForecast(parsedId);
+    return forecast ?? [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 type Props = { params: { id: string } };
 
 export default async function ResortDetail({ params }: Props) {
   const { id } = await Promise.resolve(params);
-  const resort = await loadResort(id);
-  const fresh = resort ? isFresh(resort.last_update) : false;
+  const [resort, forecast] = await Promise.all([loadResort(id), loadResortForecast(id)]);
 
   if (!resort) {
     notFound();
   }
 
+  const fresh = isFresh(resort.last_update);
   const weatherRating = normalizeWeatherRating(resort.weather_rating);
 
   return (
@@ -106,6 +120,51 @@ export default async function ResortDetail({ params }: Props) {
               <div className="stat-value">
                 {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
               </div>
+            </div>
+          </div>
+
+          <div className="detail-card detail-forecast">
+            <div className="detail-card__header">
+              <div>
+                <div className="detail-card__title">Vorhersage</div>
+                <div className="detail-card__meta">Nächste Tage</div>
+              </div>
+              <span className="pill">Prognose</span>
+            </div>
+            <div className="forecast-grid">
+              {forecast.length === 0 ? (
+                <p className="detail-card__meta">Keine Vorhersage verfügbar.</p>
+              ) : (
+                forecast.map((day) => (
+                  <div key={day.id} className="forecast-tile">
+                    <div className="forecast-date">{formatDate(day.forecast_date)}</div>
+                    <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
+                    <div className="forecast-metrics">
+                      <div>
+                        <span className="label">Min</span>
+                        <strong>{day.temp_min_c ?? "?"}°C</strong>
+                      </div>
+                      <div>
+                        <span className="label">Max</span>
+                        <strong>{day.temp_max_c ?? "?"}°C</strong>
+                      </div>
+                      <div>
+                        <span className="label">Wind</span>
+                        <strong>{day.wind_kmh ?? "?"} km/h</strong>
+                      </div>
+                      <div>
+                        <span className="label">Schnee</span>
+                        <strong>{day.snow_forecast_cm ?? "?"} cm</strong>
+                      </div>
+                      <div>
+                        <span className="label">Regen</span>
+                        <strong>{day.precipitation_mm ?? "?"} mm</strong>
+                      </div>
+                    </div>
+                    <div className="forecast-run">Lauf: {formatDate(day.forecast_run)}</div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
