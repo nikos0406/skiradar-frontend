@@ -75,9 +75,6 @@ export default async function ResortDetail({ params }: Props) {
                 >
                   Bedingungen: <strong>{formatWeatherRating(resort.weather_rating)}</strong>
                 </div>
-                <span className={`detail-badge ${fresh ? "detail-badge--fresh" : "detail-badge--stale"}`}>
-                  {fresh ? "Aktuell (< 1h)" : "Daten älter als 1h"}
-                </span>
                 <span className="detail-badge detail-badge--muted">Letztes Update: {formatDate(resort.last_update)}</span>
               </div>
               <div className="detail-stats-grid detail-stats-grid--inline">
