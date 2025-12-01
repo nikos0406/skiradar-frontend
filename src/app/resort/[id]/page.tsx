@@ -80,6 +80,38 @@ export default async function ResortDetail({ params }: Props) {
                 </span>
                 <span className="detail-badge detail-badge--muted">Letztes Update: {formatDate(resort.last_update)}</span>
               </div>
+              <div className="detail-stats-grid detail-stats-grid--inline">
+                <div className="stat">
+                  <div className="stat-label">Temperatur</div>
+                  <div className="stat-value">
+                    {resort.temp_c ?? "—"}<span className="unit">°C</span>
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Wind</div>
+                  <div className="stat-value">
+                    {resort.wind_kmh ?? "—"}<span className="unit">km/h</span>
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Schneehöhe</div>
+                  <div className="stat-value">
+                    {resort.snow_depth_cm ?? "—"}<span className="unit">cm</span>
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Neuschnee (24h)</div>
+                  <div className="stat-value">
+                    {resort.snow_new_cm ?? "—"}<span className="unit">cm</span>
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Schneehöhe gestern</div>
+                  <div className="stat-value">
+                    {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="detail-banner__media">
               <img
@@ -90,46 +122,11 @@ export default async function ResortDetail({ params }: Props) {
             </div>
           </div>
 
-          <div className="detail-stats-grid">
-            <div className="stat">
-              <div className="stat-label">Temperatur</div>
-              <div className="stat-value">
-                {resort.temp_c ?? "—"}<span className="unit">°C</span>
-              </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">Wind</div>
-              <div className="stat-value">
-                {resort.wind_kmh ?? "—"}<span className="unit">km/h</span>
-              </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">Schneehöhe</div>
-              <div className="stat-value">
-                {resort.snow_depth_cm ?? "—"}<span className="unit">cm</span>
-              </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">Neuschnee (24h)</div>
-              <div className="stat-value">
-                {resort.snow_new_cm ?? "—"}<span className="unit">cm</span>
-              </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">Schneehöhe gestern</div>
-              <div className="stat-value">
-                {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
-              </div>
-            </div>
-          </div>
-
           <div className="detail-card detail-forecast">
             <div className="detail-card__header">
               <div>
-                <div className="detail-card__title">Vorhersage</div>
-                <div className="detail-card__meta">Nächste Tage</div>
+                <div className="detail-card__title">7-Tage Vorhersage</div>
               </div>
-              <span className="pill">Prognose</span>
             </div>
             <div className="forecast-grid">
               {forecast.length === 0 ? (

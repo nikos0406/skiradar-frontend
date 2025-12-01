@@ -1729,6 +1729,10 @@ textarea {
   gap: 12px;
 }
 
+.detail-stats-grid--inline {
+  margin-top: 14px;
+}
+
 .detail-forecast {
   margin-top: 14px;
 }
