@@ -1583,6 +1583,7 @@ textarea {
 .detail-banner {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
+  grid-template-areas: "body media";
   gap: 14px;
   align-items: stretch;
   background: var(--card-bg);
@@ -1594,6 +1595,7 @@ textarea {
 }
 
 .detail-banner__media {
+  grid-area: media;
   position: relative;
   overflow: hidden;
   border-radius: 12px;
@@ -1612,6 +1614,7 @@ textarea {
 }
 
 .detail-banner__body {
+  grid-area: body;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1723,9 +1726,11 @@ textarea {
 }
 
 .detail-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
 }
 
 .detail-stats-grid--inline {
@@ -1788,17 +1793,22 @@ textarea {
 }
 
 .stat {
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-  padding: 12px;
-  background: var(--card-bg);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 10px 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .stat-label {
   color: var(--text-muted);
   font-size: 12px;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .stat-value {
@@ -1807,6 +1817,10 @@ textarea {
   display: flex;
   align-items: baseline;
   gap: 4px;
+}
+
+.detail-stats-grid .stat:last-child {
+  border-bottom: none;
 }
 
 .stat-value--pill {
@@ -1862,6 +1876,9 @@ textarea {
 @media (max-width: 960px) {
   .detail-banner {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "body";
   }
 
   .detail-banner__image {
