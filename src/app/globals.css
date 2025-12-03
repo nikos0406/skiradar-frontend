@@ -1763,6 +1763,18 @@ textarea {
   color: #0f172a;
 }
 
+.forecast-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.forecast-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .forecast-description {
   margin: 0;
   color: var(--text-muted);
@@ -1790,6 +1802,22 @@ textarea {
 .forecast-run {
   font-size: 11px;
   color: var(--text-muted);
+}
+
+.forecast-icon.weatherIcon {
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  flex: 0 0 auto;
+  line-height: 1;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .forecast-icon.weatherIcon {
+    width: 54px;
+    height: 54px;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -2317,22 +2345,6 @@ textarea {
 	Class names match the icon values returned
 	from the Wunderground API
 ----------------------------------------------*/
-* { box-sizing: border-box; }
-html { background: #86B9E0; }
-h1.title {
-	color: rgba(255,255,255,0.8);
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 1.2em;
-	font-weight: 100;
-	letter-spacing: 1px;
-	margin-bottom: 30px;
-	text-transform: uppercase;
-}
-.container {
-	margin: 12% auto;
-	text-align: center;
-	width: 80%;
-}
 .weatherIcon {
 	display: inline-block;
 	font-family: Helvetica, sans-serif;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
+import { WeatherIcon, WeatherIconVariant } from "@/components/WeatherIcon";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
 import {
@@ -38,6 +39,38 @@ async function loadResortForecast(id: string): Promise<WeatherForecast[]> {
 }
 
 type Props = { params: { id: string } };
+
+function resolveWeatherIcon(day: WeatherForecast): WeatherIconVariant {
+  const code = day.weather_code;
+
+  if (typeof code === "number") {
+    if (code === 0) return "sunny";
+    if (code === 1 || code === 2) return "partlycloudy";
+    if (code === 3) return "mostlycloudy";
+    if (code === 45 || code === 48) return "fog";
+    if ([51, 53, 55, 56, 57].includes(code)) return "rain";
+    if ([61, 63, 65, 80, 81, 82].includes(code)) return "rain";
+    if ([66, 67].includes(code)) return "sleet";
+    if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
+    if ([95, 96, 99].includes(code)) return "tstorms";
+  }
+
+  const description = (day.weather_description ?? "").toLowerCase();
+  if (description.includes("thunder") || description.includes("gewit")) return "tstorms";
+  if (description.includes("sleet") || description.includes("eisregen")) return "sleet";
+  if (description.includes("flurries")) return "flurries";
+  if (description.includes("snow") || description.includes("schnee")) return "snow";
+  if (description.includes("rain") || description.includes("regen") || description.includes("shower"))
+    return "rain";
+  if (description.includes("fog") || description.includes("nebel") || description.includes("haze"))
+    return "fog";
+  if (description.includes("cloud") || description.includes("bewölkt") || description.includes("overcast"))
+    return "mostlycloudy";
+  if (description.includes("sun") || description.includes("klar") || description.includes("clear"))
+    return "sunny";
+
+  return "partlycloudy";
+}
 
 export default async function ResortDetail({ params }: Props) {
   const { id } = await Promise.resolve(params);
@@ -131,8 +164,16 @@ export default async function ResortDetail({ params }: Props) {
               ) : (
                 forecast.map((day) => (
                   <div key={day.id} className="forecast-tile">
-                    <div className="forecast-date">{formatForecastDate(day.forecast_date)}</div>
-                    <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
+                    <div className="forecast-header">
+                      <WeatherIcon
+                        variant={resolveWeatherIcon(day)}
+                        label={day.weather_description ?? "Wetter"}
+                      />
+                      <div className="forecast-heading">
+                        <div className="forecast-date">{formatForecastDate(day.forecast_date)}</div>
+                        <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
+                      </div>
+                    </div>
                     <div className="forecast-metrics">
                       <div>
                         <span className="label">Min</span>
