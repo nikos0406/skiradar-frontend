@@ -1811,6 +1811,7 @@ textarea {
   flex: 0 0 auto;
   line-height: 1;
   position: relative;
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.18));
 }
 
 @media (max-width: 640px) {
