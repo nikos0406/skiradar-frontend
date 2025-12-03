@@ -158,6 +158,9 @@ export default async function ResortDetail({ params }: Props) {
                 <div className="detail-card__title">7-Tage Vorhersage</div>
               </div>
             </div>
+            <div className="forecast-scroll-hint" aria-hidden="true">
+              ← Wischen oder scrollen, um alle Tage zu sehen →
+            </div>
             <div className="forecast-grid">
               {forecast.length === 0 ? (
                 <p className="detail-card__meta">Keine Vorhersage verfügbar.</p>
