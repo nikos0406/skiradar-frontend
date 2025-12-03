@@ -1,0 +1,16 @@
+@media print {
+  .header,
+  .btn,
+  .hub-actions,
+  .nav-link {
+    display: none;
+  }
+  
+  body {
+    background: white;
+  }
+  
+  .card {
+    break-inside: avoid;
+  }
+}

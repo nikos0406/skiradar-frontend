@@ -1,5 +1,23 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./styles/base.css";
+import "./styles/global-reset-base.css";
+import "./styles/layout.css";
+import "./styles/header.css";
+import "./styles/typografie.css";
+import "./styles/forms.css";
+import "./styles/buttons.css";
+import "./styles/alerts.css";
+import "./styles/startseite-intro-karten.css";
+import "./styles/admin-hub.css";
+import "./styles/bild-preview.css";
+import "./styles/delete-seite-resort-liste.css";
+import "./styles/loading-states.css";
+import "./styles/utility-classes.css";
+import "./styles/print-styles.css";
+import "./styles/responsive.css";
+import "./styles/footer.css";
+import "./styles/landing-page.css";
+import "./styles/weather-icons.css";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
