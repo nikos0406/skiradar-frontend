@@ -165,14 +165,12 @@ export default async function ResortDetail({ params }: Props) {
                 forecast.map((day) => (
                   <div key={day.id} className="forecast-tile">
                     <div className="forecast-header">
+                      <div className="forecast-date">{formatForecastDate(day.forecast_date)}</div>
                       <WeatherIcon
                         variant={resolveWeatherIcon(day)}
                         label={day.weather_description ?? "Wetter"}
                       />
-                      <div className="forecast-heading">
-                        <div className="forecast-date">{formatForecastDate(day.forecast_date)}</div>
-                        <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
-                      </div>
+                      <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
                     </div>
                     <div className="forecast-metrics">
                       <div>

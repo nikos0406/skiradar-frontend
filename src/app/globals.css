@@ -1765,19 +1765,18 @@ textarea {
 
 .forecast-header {
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.forecast-heading {
-  display: flex;
   flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 6px;
 }
 
 .forecast-description {
   margin: 0;
   color: var(--text-muted);
+  flex: 0 0 auto;
+  min-width: 0;
+  text-align: center;
+  line-height: 1.35;
 }
 
 .forecast-metrics {
@@ -1802,11 +1801,12 @@ textarea {
 .forecast-run {
   font-size: 11px;
   color: var(--text-muted);
+  margin-top: 2px;
 }
 
 .forecast-icon.weatherIcon {
-  width: 64px;
-  height: 64px;
+  width: 36px;
+  height: 36px;
   margin: 0;
   flex: 0 0 auto;
   line-height: 1;
@@ -1815,8 +1815,8 @@ textarea {
 
 @media (max-width: 640px) {
   .forecast-icon.weatherIcon {
-    width: 54px;
-    height: 54px;
+    width: 30px;
+    height: 30px;
   }
 }
 
