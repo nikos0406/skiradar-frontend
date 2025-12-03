@@ -1761,12 +1761,13 @@ textarea {
 .forecast-date {
   font-weight: 700;
   color: #0f172a;
+  text-align: left;
 }
 
 .forecast-header {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
 }
 
@@ -1776,6 +1777,7 @@ textarea {
   flex: 0 0 auto;
   min-width: 0;
   text-align: center;
+  align-self: center;
   line-height: 1.35;
   font-size: 14px;
 }
@@ -1822,6 +1824,7 @@ textarea {
   position: relative;
   filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.18));
   overflow: visible;
+  align-self: center;
 }
 
 @media (max-width: 640px) {
@@ -2370,6 +2373,7 @@ textarea {
 	margin: 2%;
 	position: relative;
 	width: 100px;
+	overflow: visible;
 }
 .weatherIcon:before, .weatherIcon:after {
 	content: "";
@@ -2564,11 +2568,19 @@ textarea {
 	width: 55%;
 }
 .fog > .inner:before, .fog > .inner:after, .hazy > .inner:before, .hazy > .inner:after {
-	color: #fff;
-	content: "\2307";
-	font-size: 5em;
-	left: 7%;
-	transform: rotate(90deg);
+	content: "";
+	position: absolute;
+	left: 6%;
+	width: 88%;
+	height: 0.18em;
+	background: #fff;
+	border-radius: 4px;
+	box-shadow:
+		0 0 0 #fff,
+		18% 0 0 #fff,
+		36% 0 0 #fff,
+		54% 0 0 #fff,
+		72% 0 0 #fff;
 }
 .fog > .inner:before, .hazy > .inner:before {
 	bottom: 14%;
@@ -2653,13 +2665,17 @@ textarea {
 	width: 35%;
 }
 .chancesleet > .inner:before, .sleet > .inner:before {
-	bottom: 12%;
-	color: #fff;
-	content: "\2733\ \ \2733";
-	font-size: 1em;
-	left: 27%;
-	transform: rotate(-70deg);
-	width: 40%;
+	bottom: 10%;
+	left: 24%;
+	width: 0.18em;
+	height: 0.18em;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow:
+		0.28em -0.22em 0 #fff,
+		0.56em -0.06em 0 #fff,
+		0.84em -0.24em 0 #fff;
+	transform: rotate(-18deg);
 }
 .chancesleet > .inner:after, .chancesleet:after, .sleet > .inner:after, .sleet:after {
 	background: #BACEDD;
@@ -2679,9 +2695,16 @@ textarea {
 }
 /*** Chance Flurries / Flurries ***/
 .chanceflurries > .inner:before, .chanceflurries > .inner:after, .flurries > .inner:before, .flurries > .inner:after {
-	color: #fff;
-	content: "\25CF\ \25CF\ \25CF";
-	font-size: 1.1em;
+	content: "";
+	position: absolute;
+	width: 0.16em;
+	height: 0.16em;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow:
+		0.22em -0.14em 0 #fff,
+		0.48em 0 0 #fff,
+		0.74em -0.12em 0 #fff;
 }
 .chanceflurries > .inner:before, .flurries > .inner:before {
 	bottom: 17%;
