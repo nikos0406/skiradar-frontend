@@ -1812,6 +1812,7 @@ textarea {
   line-height: 1;
   position: relative;
   filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.18));
+  overflow: visible;
 }
 
 @media (max-width: 640px) {
@@ -2695,18 +2696,25 @@ textarea {
 	width: 55%;
 }
 /*** Chance Snow / Snow ***/
-.chancesnow > .inner:before, .chancesnow > .inner:after, .snow > .inner:before, .snow > .inner:after {
-	color: #fff;
-	content: "\2733\ \2733\ \2733";
-	font-size: 1em;
+.chancesnow > .inner:before, .snow > .inner:before,
+.chancesnow > .inner:after, .snow > .inner:after {
+	content: "";
+	position: absolute;
+	width: 0.18em;
+	height: 0.18em;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow:
+		0.26em 0 0 #fff,
+		0.52em -0.12em 0 #fff;
 }
 .chancesnow > .inner:before, .snow > .inner:before {
-	bottom: 17%;
-	right: 21%;
+	bottom: 16%;
+	left: 18%;
 }
 .chancesnow > .inner:after, .snow > .inner:after {
-	bottom: 0;
-	left: 21%;
+	bottom: 2%;
+	left: 26%;
 }
 .chancesnow:before, .chancesnow:after,
 .snow:before, .snow:after {
