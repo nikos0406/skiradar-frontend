@@ -112,7 +112,7 @@ export async function updateResort(
   return parseResponse<SkiResort>(response);
 }
 
-export async function deleteResort(id: number) {
+export async function deleteResort(id: number): Promise<SkiResort | null> {
   const response = await fetch(buildUrl(`/api/resorts/${id}`), {
     ...defaultInit,
     method: "DELETE",

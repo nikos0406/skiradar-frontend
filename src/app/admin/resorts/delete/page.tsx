@@ -37,8 +37,11 @@ export default function DeleteResortPage() {
     setAlert(null);
     try {
       const deleted = await deleteResort(id);
-      setResorts((prev) => prev.filter((r) => r.id !== deleted.id));
-      setAlert({ type: "success", text: `"${deleted.name}" wurde gelöscht.` });
+      const deletedId = deleted?.id ?? id;
+      const deletedName = deleted?.name ?? label ?? `ID ${id}`;
+
+      setResorts((prev) => prev.filter((r) => r.id !== deletedId));
+      setAlert({ type: "success", text: `"${deletedName}" wurde gelöscht.` });
     } catch (error) {
       console.error(error);
       setAlert({ type: "error", text: (error as Error).message || "Löschen fehlgeschlagen" });
