@@ -601,6 +601,7 @@
   border-radius: 999px;
   border: 1px solid transparent;
   background: #e5e7eb;
+  display: inline-block;
 }
 
 .detail-badges .pill--rating-excellent {
@@ -765,7 +766,10 @@
 .forecast-rating {
   align-self: stretch;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
 }
 
 .forecast-rating .pill--rating {
