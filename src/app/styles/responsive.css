@@ -763,18 +763,15 @@
   font-size: 14px;
 }
 
-.forecast-rating {
-  align-self: stretch;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
+.forecast-rating-chip {
+  align-self: center;
 }
 
-.forecast-rating .pill--rating {
-  padding: 4px 10px;
-  font-size: 12px;
+.forecast-rating-chip .pill--rating {
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .forecast-metrics {

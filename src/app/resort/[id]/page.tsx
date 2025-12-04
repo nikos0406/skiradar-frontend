@@ -176,7 +176,7 @@ export default async function ResortDetail({ params }: Props) {
                         label={day.weather_description ?? "Wetter"}
                       />
                       <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
-                      <div className="forecast-rating">
+                      <div className="forecast-rating-chip">
                         <span
                           className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(day.weather_rating)}`}
                         >
