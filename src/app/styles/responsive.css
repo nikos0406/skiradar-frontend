@@ -599,6 +599,52 @@
   gap: 8px;
 }
 
+.detail-badges .pill--rating {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #e5e7eb;
+}
+
+.detail-badges .pill--rating-excellent {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.detail-badges .pill--rating-good {
+  background: #e0f2fe;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.detail-badges .pill--rating-moderate {
+  background: #fef9c3;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.detail-badges .pill--rating-poor {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecdd3;
+}
+
+.detail-badges .pill--rating-muted {
+  background: #e5e7eb;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+
+.detail-badges .detail-badge.detail-badge--muted {
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
 .detail-badge {
   display: inline-flex;
   align-items: center;
