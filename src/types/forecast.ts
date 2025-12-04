@@ -9,5 +9,6 @@ export type WeatherForecast = {
     snow_forecast_cm?: number,
     weather_description?: string,
     weather_code?: number,
+    weather_rating?: string | null,
     forecast_run: string
 }

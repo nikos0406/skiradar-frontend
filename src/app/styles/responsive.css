@@ -762,6 +762,17 @@
   font-size: 14px;
 }
 
+.forecast-rating {
+  align-self: stretch;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.forecast-rating .pill--rating {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
 .forecast-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
