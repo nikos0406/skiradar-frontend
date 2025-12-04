@@ -143,11 +143,13 @@ export default async function ResortDetail({ params }: Props) {
                 </div>
               </div>
             </div>
-            <img
-              className="detail-banner__image"
-              src={fallbackImage(resort.image_url)}
-              alt="Bild des Skigebiets"
-            />
+            <div className="detail-image-wrapper">
+              <img
+                className="detail-banner__image"
+                src={fallbackImage(resort.image_url)}
+                alt="Bild des Skigebiets"
+              />
+            </div>
           </div>
 
           <div className="detail-card detail-forecast">
