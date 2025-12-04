@@ -143,7 +143,7 @@ export default async function ResortDetail({ params }: Props) {
                 </div>
               </div>
             </div>
-            <div className="detail-banner__media">
+            <div className="detail-image-wrapper">
               <img
                 className="detail-banner__image"
                 src={fallbackImage(resort.image_url)}
