@@ -601,6 +601,7 @@
   border-radius: 999px;
   border: 1px solid transparent;
   background: #e5e7eb;
+  display: inline-block;
 }
 
 .detail-badges .pill--rating-excellent {
@@ -717,6 +718,19 @@
   margin-top: 14px;
 }
 
+.detail-banner__footer {
+  margin-top: auto;
+  padding-top: 8px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.detail-banner__footer-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 .detail-forecast {
   margin-top: 14px;
 }
@@ -760,6 +774,17 @@
   align-self: center;
   line-height: 1.35;
   font-size: 14px;
+}
+
+.forecast-rating-chip {
+  align-self: center;
+}
+
+.forecast-rating-chip .pill--rating {
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .forecast-metrics {

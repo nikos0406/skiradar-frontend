@@ -108,7 +108,6 @@ export default async function ResortDetail({ params }: Props) {
                 >
                   Bedingungen: <strong>{formatWeatherRating(resort.weather_rating)}</strong>
                 </div>
-                <span className="detail-badge detail-badge--muted">Letztes Update: {formatDate(resort.last_update)}</span>
               </div>
               <div className="detail-stats-grid detail-stats-grid--inline">
                 <div className="stat">
@@ -141,6 +140,11 @@ export default async function ResortDetail({ params }: Props) {
                     {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
                   </div>
                 </div>
+              </div>
+              <div className="detail-banner__footer">
+                <span className="detail-banner__footer-text">
+                  Letztes Update: {formatDate(resort.last_update)}
+                </span>
               </div>
             </div>
             <div className="detail-image-wrapper">
@@ -176,6 +180,13 @@ export default async function ResortDetail({ params }: Props) {
                         label={day.weather_description ?? "Wetter"}
                       />
                       <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
+                      <div className="forecast-rating-chip">
+                        <span
+                          className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(day.weather_rating)}`}
+                        >
+                          Bedingungen: <strong>{formatWeatherRating(day.weather_rating)}</strong>
+                        </span>
+                      </div>
                     </div>
                     <div className="forecast-metrics">
                       <div>
