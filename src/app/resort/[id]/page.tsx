@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { WeatherIcon, WeatherIconVariant } from "@/components/WeatherIcon";
+import { WeatherIcon } from "@/components/WeatherIcon";
 import { WeatherOverlayMap } from "@/components/WeatherOverlayMap";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
+import { resolveWeatherIconVariant } from "@/lib/weatherIcon";
 import {
   formatWeatherRating,
   normalizeWeatherRating,
@@ -41,36 +42,8 @@ async function loadResortForecast(id: string): Promise<WeatherForecast[]> {
 
 type Props = { params: { id: string } };
 
-function resolveWeatherIcon(day: WeatherForecast): WeatherIconVariant {
-  const code = day.weather_code;
-
-  if (typeof code === "number") {
-    if (code === 0) return "sunny";
-    if (code === 1 || code === 2) return "partlycloudy";
-    if (code === 3) return "mostlycloudy";
-    if (code === 45 || code === 48) return "fog";
-    if ([51, 53, 55, 56, 57].includes(code)) return "rain";
-    if ([61, 63, 65, 80, 81, 82].includes(code)) return "rain";
-    if ([66, 67].includes(code)) return "sleet";
-    if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
-    if ([95, 96, 99].includes(code)) return "tstorms";
-  }
-
-  const description = (day.weather_description ?? "").toLowerCase();
-  if (description.includes("thunder") || description.includes("gewit")) return "tstorms";
-  if (description.includes("sleet") || description.includes("eisregen")) return "sleet";
-  if (description.includes("flurries")) return "flurries";
-  if (description.includes("snow") || description.includes("schnee")) return "snow";
-  if (description.includes("rain") || description.includes("regen") || description.includes("shower"))
-    return "rain";
-  if (description.includes("fog") || description.includes("nebel") || description.includes("haze"))
-    return "fog";
-  if (description.includes("cloud") || description.includes("bewölkt") || description.includes("overcast"))
-    return "mostlycloudy";
-  if (description.includes("sun") || description.includes("klar") || description.includes("clear"))
-    return "sunny";
-
-  return "partlycloudy";
+function resolveWeatherIcon(day: WeatherForecast) {
+  return resolveWeatherIconVariant(day.weather_code, day.weather_description);
 }
 
 export default async function ResortDetail({ params }: Props) {
@@ -89,6 +62,7 @@ export default async function ResortDetail({ params }: Props) {
     Number.isFinite(resort.lat) && Number.isFinite(resort.lon)
       ? `${resort.lat.toFixed(2)}°, ${resort.lon.toFixed(2)}°`
       : "—";
+  const currentIcon = resolveWeatherIconVariant(undefined, resort.weather_description);
 
   return (
     <>
@@ -103,7 +77,10 @@ export default async function ResortDetail({ params }: Props) {
             <div className="detail-banner__body">
               <div className="detail-kicker">Live-Daten</div>
               <h1 className="detail-title">{resort.name ?? "Unbekanntes Gebiet"}</h1>
-              <p className="detail-lede">{resort.weather_description ?? "Keine Wetterdaten verfügbar"}</p>
+              <div className="detail-conditions-row">
+                <WeatherIcon variant={currentIcon} label={resort.weather_description ?? "Wetter"} />
+                <p className="detail-lede">{resort.weather_description ?? "Keine Wetterdaten verfügbar"}</p>
+              </div>
               <div className="detail-banner__meta">
                 <div className="pill">Land: <strong>{resort.country ?? "—"}</strong></div>
                 <div className="pill">Bundesland/Kanton: <strong>{resort.state ?? "—"}</strong></div>
@@ -161,11 +138,6 @@ export default async function ResortDetail({ params }: Props) {
                   src={fallbackImage(resort.image_url)}
                   alt="Bild des Skigebiets"
                 />
-              </div>
-              <div className="detail-media__caption">
-                <span className="detail-media__label">Standort</span>
-                <strong className="detail-media__value">{locationDisplay}</strong>
-                <span className="detail-media__coords">{coordinatesLabel}</span>
               </div>
             </div>
           </div>

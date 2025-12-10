@@ -707,6 +707,17 @@
   line-height: 1.5;
 }
 
+.detail-conditions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-conditions-row .weatherIcon {
+  width: 48px;
+  height: 48px;
+}
+
 .detail-banner__meta {
   display: flex;
   flex-wrap: wrap;
