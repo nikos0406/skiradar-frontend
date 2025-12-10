@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { WeatherIcon, WeatherIconVariant } from "@/components/WeatherIcon";
+import { WeatherOverlayMap } from "@/components/WeatherOverlayMap";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
 import {
@@ -147,12 +148,15 @@ export default async function ResortDetail({ params }: Props) {
                 </span>
               </div>
             </div>
-            <div className="detail-image-wrapper">
-              <img
-                className="detail-banner__image"
-                src={fallbackImage(resort.image_url)}
-                alt="Bild des Skigebiets"
-              />
+            <div className="detail-media">
+              <div className="detail-image-wrapper">
+                <img
+                  className="detail-banner__image"
+                  src={fallbackImage(resort.image_url)}
+                  alt="Bild des Skigebiets"
+                />
+              </div>
+              <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
             </div>
           </div>
 
