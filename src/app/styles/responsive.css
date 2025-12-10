@@ -608,7 +608,7 @@
   border-radius: 10px;
   overflow: hidden;
   background: #e2e8f0;
-  max-height: 220px;
+  max-height: 350px;
 }
 
 .detail-map__frame iframe {
