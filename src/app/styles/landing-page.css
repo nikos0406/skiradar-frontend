@@ -190,33 +190,39 @@
   font-weight: 700;
   border: 1px solid transparent;
   padding: 4px 9px;
-  color: #ffffff;
+  color: #0f172a;
+  border-radius: 12px;
 }
 
 .pill--rating-excellent {
-  background: #16a34a;
-  border-color: #15803d;
+  background: #e7f9f1;
+  border-color: #b6f1d4;
+  color: #0f5132;
 }
 
 .pill--rating-good {
-  background: #2563eb;
-  border-color: #1e40af;
+  background: #e7f1fb;
+  border-color: #bfd7ff;
+  color: #1e3a8a;
 }
 
 .pill--rating-moderate {
-  background: #f97316;
-  border-color: #c2410c;
+  background: #fdf5e7;
+  border-color: #fde1b0;
+  color: #8a4b16;
 }
 
 .pill--rating-poor {
-  background: #dc2626;
-  border-color: #b91c1c;
+  background: #feeaea;
+  border-color: #fcb4c3;
+  color: #8f2d46;
 }
 
 .pill--rating-muted {
-  background: #475569;
-  border-color: #334155;
+  background: #f1f5f9;
+  border-color: #d9e3ef;
   font-weight: 600;
+  color: #475569;
 }
 
 .landing-grid {
