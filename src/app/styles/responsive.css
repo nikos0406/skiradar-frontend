@@ -694,37 +694,42 @@
 
 .pill--rating {
   padding: 6px 12px;
-  border-radius: 999px;
   border: 1px solid transparent;
-  background: #334155;
-  display: inline-block;
-  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 700;
+  color: #0f172a;
 }
 
 .pill--rating-excellent {
-  background: #16a34a;
-  border-color: #15803d;
+  background: #ecfdf3;
+  border-color: #9ae6b4;
+  color: #166534;
 }
 
 .pill--rating-good {
-  background: #2563eb;
-  border-color: #1e40af;
+  background: #e0f2fe;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 
 .pill--rating-moderate {
-  background: #f97316;
-  border-color: #c2410c;
+  background: #fef9c3;
+  border-color: #fde68a;
+  color: #92400e;
 }
 
 .pill--rating-poor {
-  background: #dc2626;
-  border-color: #b91c1c;
+  background: #fee2e2;
+  border-color: #fecdd3;
+  color: #b91c1c;
 }
 
 .pill--rating-muted {
-  background: #475569;
-  border-color: #334155;
+  background: #f1f5f9;
+  border-color: #d9e3ef;
+  color: #475569;
 }
 
 .detail-badges .detail-badge.detail-badge--muted {
