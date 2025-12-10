@@ -83,6 +83,12 @@ export default async function ResortDetail({ params }: Props) {
 
   const fresh = isFresh(resort.last_update);
   const weatherRating = normalizeWeatherRating(resort.weather_rating);
+  const locationLabel = [resort.state, resort.country].filter(Boolean).join(" · ");
+  const locationDisplay = locationLabel.length > 0 ? locationLabel : "Standort unbekannt";
+  const coordinatesLabel =
+    Number.isFinite(resort.lat) && Number.isFinite(resort.lon)
+      ? `${resort.lat.toFixed(2)}°, ${resort.lon.toFixed(2)}°`
+      : "—";
 
   return (
     <>
@@ -156,9 +162,17 @@ export default async function ResortDetail({ params }: Props) {
                   alt="Bild des Skigebiets"
                 />
               </div>
-              <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
+              <div className="detail-media__caption">
+                <span className="detail-media__label">Standort</span>
+                <strong className="detail-media__value">{locationDisplay}</strong>
+                <span className="detail-media__coords">{coordinatesLabel}</span>
+              </div>
             </div>
           </div>
+
+          <section className="detail-map-section" aria-label="Interaktive Wetterkarte">
+            <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
+          </section>
 
           <div className="detail-card detail-forecast">
             <div className="detail-card__header">
