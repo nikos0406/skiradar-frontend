@@ -776,6 +776,16 @@
   font-weight: 800;
   margin: 0;
   color: #0f172a;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  align-items: baseline;
+}
+
+.detail-title__location {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.8em;
 }
 
 .detail-lede {

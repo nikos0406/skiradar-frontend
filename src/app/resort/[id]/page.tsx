@@ -164,7 +164,10 @@ export default async function ResortDetail({ params }: Props) {
           <div className="detail-banner">
             <div className="detail-banner__body">
               <div className="detail-kicker">Live-Daten</div>
-              <h1 className="detail-title">{resort.name ?? "Unbekanntes Gebiet"}</h1>
+              <h1 className="detail-title">
+                {resort.name ?? "Unbekanntes Gebiet"}
+                {resort.state ? <span className="detail-title__location">, {resort.state}</span> : null}
+              </h1>
               <div className="detail-conditions-row">
                 <WeatherIcon variant={currentIcon} label={resort.weather_description ?? "Wetter"} />
                 <p className="detail-lede">{resort.weather_description ?? "Keine Wetterdaten verfügbar"}</p>
