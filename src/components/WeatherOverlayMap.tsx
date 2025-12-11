@@ -9,7 +9,7 @@ type Props = {
 };
 
 const OVERLAY_OPTIONS = [
-  { id: "snowcover", label: "Schneedecke" },
+  { id: "snowcover", label: "Schneehöhe" },
   { id: "wind", label: "Wind" },
   { id: "temp", label: "Temperatur" },
 ] as const;
@@ -29,7 +29,7 @@ export function WeatherOverlayMap({ lat, lon, resortName }: Props) {
       lon: lon.toFixed(3),
       detailLat: lat.toFixed(3),
       detailLon: lon.toFixed(3),
-      zoom: "10",
+      zoom: "9",
       level: "surface",
       overlay,
     });
@@ -69,6 +69,7 @@ export function WeatherOverlayMap({ lat, lon, resortName }: Props) {
           referrerPolicy="no-referrer"
           allow="geolocation"
         />
+        <div className="detail-map__center-marker" aria-hidden="true" />
       </div>
     </section>
   );

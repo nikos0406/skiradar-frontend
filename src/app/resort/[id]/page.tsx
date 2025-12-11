@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { WeatherIcon } from "@/components/WeatherIcon";
 import { WeatherOverlayMap } from "@/components/WeatherOverlayMap";
 import { WebcamModal } from "@/components/WebcamModal";
+import { ShareButton } from "@/components/ShareButton";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
 import { resolveWeatherIconVariant } from "@/lib/weatherIcon";
@@ -162,6 +163,7 @@ export default async function ResortDetail({ params }: Props) {
           </div>
 
           <div className="detail-banner">
+            <ShareButton resortName={resort.name} />
             <div className="detail-banner__body">
               <div className="detail-kicker">Live-Daten</div>
               <h1 className="detail-title">
