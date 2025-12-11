@@ -863,6 +863,33 @@
   margin-top: 14px;
 }
 
+.detail-intelligence {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #f8fafc;
+}
+
+.detail-intelligence__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.detail-intelligence__list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #0f172a;
+}
+
 .detail-banner__footer {
   margin-top: auto;
   padding-top: 8px;

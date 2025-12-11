@@ -63,6 +63,92 @@ export default async function ResortDetail({ params }: Props) {
       ? `${resort.lat.toFixed(2)}°, ${resort.lon.toFixed(2)}°`
       : "—";
   const currentIcon = resolveWeatherIconVariant(undefined, resort.weather_description);
+  const hasFreshSnow = typeof resort.snow_new_cm === "number" && resort.snow_new_cm >= 5;
+  const hasDeepBase = typeof resort.snow_depth_cm === "number" && resort.snow_depth_cm >= 120;
+  const strongWind = typeof resort.wind_kmh === "number" && resort.wind_kmh >= 45;
+  const mildWind = typeof resort.wind_kmh === "number" && resort.wind_kmh <= 20;
+  const warmTemp = typeof resort.temp_c === "number" && resort.temp_c >= 3;
+  const frigidTemp = typeof resort.temp_c === "number" && resort.temp_c <= -8;
+  const staleData = !fresh;
+  const upcomingSnowDay = forecast.find((day) => (day.snow_forecast_cm ?? 0) >= 5);
+  const calmWindow = forecast.find((day) => typeof day.wind_kmh === "number" && day.wind_kmh <= 20);
+  const warmWindow = forecast.find((day) => typeof day.temp_max_c === "number" && (day.temp_max_c ?? 0) >= 5);
+
+  const intelligenceInsights: { title: string; detail: string }[] = [];
+
+  if (hasFreshSnow && mildWind) {
+    intelligenceInsights.push({
+      title: "Powder & ruhig",
+      detail: `${resort.snow_new_cm} cm Neuschnee treffen auf nur ${resort.wind_kmh ?? "?"} km/h Wind – früh raus für butterweiche Lines.`,
+    });
+  } else if (hasFreshSnow) {
+    intelligenceInsights.push({
+      title: "Powderfenster",
+      detail: `${resort.snow_new_cm} cm Neuschnee in 24h. Nutze windgeschützte Hänge für beste Sicht.`,
+    });
+  }
+
+  if (hasDeepBase && !warmTemp) {
+    intelligenceInsights.push({
+      title: "Tiefe Basis",
+      detail: `Schneehöhe bei ${resort.snow_depth_cm} cm – ideale Grundlage für längere Touren & Variantenabfahrten.`,
+    });
+  }
+
+  if (strongWind && !hasFreshSnow) {
+    intelligenceInsights.push({
+      title: "Wind-Alert",
+      detail: `Aktuell ${resort.wind_kmh} km/h. Plane windarme Zonen oder spätere Liftenstarts ein.`,
+    });
+  } else if (mildWind && warmTemp) {
+    intelligenceInsights.push({
+      title: "Frühjahrsgefühl",
+      detail: `Nur ${resort.wind_kmh ?? 0} km/h Wind und ${resort.temp_c ?? 0}°C – vormittags top, nachmittags wird's weich.`,
+    });
+  }
+
+  if (frigidTemp && hasDeepBase) {
+    intelligenceInsights.push({
+      title: "Scharfe Kälte",
+      detail: `${resort.temp_c}°C halten den Basepack hart – Kanten checken & Layer vorbereiten.`,
+    });
+  }
+
+  if (staleData) {
+    intelligenceInsights.push({
+      title: "Update empfohlen",
+      detail: "Daten älter als 60 Minuten. Kurz vor Abfahrt erneut abrufen für finale Planung.",
+    });
+  }
+
+  if (upcomingSnowDay && (!hasFreshSnow || strongWind)) {
+    intelligenceInsights.push({
+      title: "Nächster Schneeschub",
+      detail: `${formatForecastDate(upcomingSnowDay.forecast_date)} werden bis zu ${upcomingSnowDay.snow_forecast_cm ?? "?"} cm erwartet – Reise ggf. dahin timen.`,
+    });
+  }
+
+  if (calmWindow && strongWind) {
+    intelligenceInsights.push({
+      title: "Ruhephase",
+      detail: `${formatForecastDate(calmWindow.forecast_date)} fällt der Wind auf ${calmWindow.wind_kmh ?? "?"} km/h – Shuttle/Heli-Slots dort planen.`,
+    });
+  }
+
+  if (warmWindow && !warmTemp) {
+    intelligenceInsights.push({
+      title: "Mildes Zeitfenster",
+      detail: `${formatForecastDate(warmWindow.forecast_date)} steigt die Max-Temperatur auf ${warmWindow.temp_max_c ?? "?"}°C – Slush Runs gegen Nachmittag einkalkulieren.`,
+    });
+  }
+
+  if (intelligenceInsights.length === 0) {
+    intelligenceInsights.push({
+      title: "Standardlage",
+      detail: "Keine Extremwerte in Sicht – Fokus auf klassische Routen und frühe Startzeiten.",
+    });
+  }
+  const heroIntel = intelligenceInsights.slice(0, 2);
 
   return (
     <>
@@ -139,6 +225,18 @@ export default async function ResortDetail({ params }: Props) {
                   alt="Bild des Skigebiets"
                 />
               </div>
+              {heroIntel.length > 0 ? (
+                <div className="detail-intelligence">
+                  <div className="detail-intelligence__label">SkiRadar Intelligence</div>
+                  <ul className="detail-intelligence__list">
+                    {heroIntel.map((tip) => (
+                      <li key={tip.title}>
+                        <strong>{tip.title}:</strong> {tip.detail}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           </div>
 
