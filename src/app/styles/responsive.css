@@ -539,6 +539,13 @@
   gap: 10px;
   align-self: stretch;
   max-width: 100%;
+  margin-top: 0;
+}
+
+@media (min-width: 961px) {
+  .detail-media {
+    margin-top: clamp(48px, 6vw, 110px);
+  }
 }
 
 .detail-image-wrapper {
@@ -1228,6 +1235,10 @@
 
   .detail-aside {
     position: static;
+  }
+
+  .detail-media {
+    margin-top: 0;
   }
 }
 
