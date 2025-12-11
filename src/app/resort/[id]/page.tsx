@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { WeatherIcon } from "@/components/WeatherIcon";
 import { WeatherOverlayMap } from "@/components/WeatherOverlayMap";
+import { WebcamModal } from "@/components/WebcamModal";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
 import { resolveWeatherIconVariant } from "@/lib/weatherIcon";
@@ -56,6 +57,7 @@ export default async function ResortDetail({ params }: Props) {
 
   const fresh = isFresh(resort.last_update);
   const weatherRating = normalizeWeatherRating(resort.weather_rating);
+  const heroImage = fallbackImage(resort.image_url);
   const locationLabel = [resort.state, resort.country].filter(Boolean).join(" · ");
   const locationDisplay = locationLabel.length > 0 ? locationLabel : "Standort unbekannt";
   const coordinatesLabel =
@@ -218,13 +220,7 @@ export default async function ResortDetail({ params }: Props) {
             </div>
             <div className="detail-media">
               <div className="detail-image-wrapper">
-                <a href="#webcam-modal" aria-label="Webcam in groß anzeigen" className="detail-image-link">
-                  <img
-                    className="detail-banner__image"
-                    src={fallbackImage(resort.image_url)}
-                    alt="Bild des Skigebiets"
-                  />
-                </a>
+                <WebcamModal imageSrc={heroImage} resortName={resort.name} />
               </div>
               {heroIntel.length > 0 ? (
                 <div className="detail-intelligence">
@@ -306,15 +302,6 @@ export default async function ResortDetail({ params }: Props) {
           </div>
         </div>
       </main>
-      <div id="webcam-modal" className="image-modal" aria-hidden="true">
-        <a href="#" className="image-modal__backdrop" aria-label="Schließen" />
-        <div className="image-modal__dialog" role="dialog" aria-modal="true" aria-label="Webcam Vollbild">
-          <img src={fallbackImage(resort.image_url)} alt="Webcam Vollbild" />
-          <a href="#" className="image-modal__close" aria-label="Schließen">
-            ×
-          </a>
-        </div>
-      </div>
     </>
   );
 }
