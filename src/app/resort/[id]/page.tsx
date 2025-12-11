@@ -219,11 +219,13 @@ export default async function ResortDetail({ params }: Props) {
             </div>
             <div className="detail-media">
               <div className="detail-image-wrapper">
-                <img
-                  className="detail-banner__image"
-                  src={fallbackImage(resort.image_url)}
-                  alt="Bild des Skigebiets"
-                />
+                <a href="#webcam-modal" aria-label="Webcam in groß anzeigen" className="detail-image-link">
+                  <img
+                    className="detail-banner__image"
+                    src={fallbackImage(resort.image_url)}
+                    alt="Bild des Skigebiets"
+                  />
+                </a>
               </div>
               {heroIntel.length > 0 ? (
                 <div className="detail-intelligence">
@@ -305,6 +307,15 @@ export default async function ResortDetail({ params }: Props) {
           </div>
         </div>
       </main>
+      <div id="webcam-modal" className="image-modal" aria-hidden="true">
+        <a href="#" className="image-modal__backdrop" aria-label="Schließen" />
+        <div className="image-modal__dialog" role="dialog" aria-modal="true" aria-label="Webcam Vollbild">
+          <img src={fallbackImage(resort.image_url)} alt="Webcam Vollbild" />
+          <a href="#" className="image-modal__close" aria-label="Schließen">
+            ×
+          </a>
+        </div>
+      </div>
     </>
   );
 }
