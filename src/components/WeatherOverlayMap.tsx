@@ -29,7 +29,7 @@ export function WeatherOverlayMap({ lat, lon, resortName }: Props) {
       lon: lon.toFixed(3),
       detailLat: lat.toFixed(3),
       detailLon: lon.toFixed(3),
-      zoom: "10",
+      zoom: "8",
       level: "surface",
       overlay,
     });
