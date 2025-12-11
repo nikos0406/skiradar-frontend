@@ -167,18 +167,6 @@ export default async function ResortDetail({ params }: Props) {
                 <WeatherIcon variant={currentIcon} label={resort.weather_description ?? "Wetter"} />
                 <p className="detail-lede">{resort.weather_description ?? "Keine Wetterdaten verfügbar"}</p>
               </div>
-              <div className="detail-banner__meta">
-                <div className="pill">Land: <strong>{resort.country ?? "—"}</strong></div>
-                <div className="pill">Bundesland/Kanton: <strong>{resort.state ?? "—"}</strong></div>
-              </div>
-              <div className="detail-badges">
-                <div
-                  className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
-                  aria-label="Aktuelle Bedingungen"
-                >
-                  Bedingungen: <strong>{formatWeatherRating(resort.weather_rating)}</strong>
-                </div>
-              </div>
               <div className="detail-stats-grid detail-stats-grid--inline">
                 <div className="stat">
                   <div className="stat-label">Temperatur</div>
@@ -208,6 +196,17 @@ export default async function ResortDetail({ params }: Props) {
                   <div className="stat-label">Schneehöhe gestern</div>
                   <div className="stat-value">
                     {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-label">Bedingungen</div>
+                  <div className="stat-value stat-value--pill">
+                    <span
+                      className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
+                      aria-label="Aktuelle Bedingungen"
+                    >
+                      {formatWeatherRating(resort.weather_rating)}
+                    </span>
                   </div>
                 </div>
               </div>
