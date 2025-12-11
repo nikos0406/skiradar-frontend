@@ -2,7 +2,7 @@
   background: #2778c0;
   color: #fff;
   box-shadow: var(--shadow-header);
-  margin-bottom: 18px;
+  margin-bottom: var(--space-md);
   margin-top: calc(env(safe-area-inset-top, 0px) * -1);
   position: sticky;
   top: 0;
@@ -25,18 +25,18 @@
 .header-inner {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 12px var(--spacing-lg);
+  padding: var(--space-sm) var(--space-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  min-height: 52px;
+  gap: var(--space-md);
+  min-height: 3.5rem;
 }
 
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
   transition: transform var(--transition-fast);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .header-text-main {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -70,7 +70,7 @@
 }
 
 .header-text-sub {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   opacity: 0.92;
   margin-top: 2px;
   font-weight: 400;
@@ -79,8 +79,8 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 12px;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
 }
 
 /* Live-Chip mit verbesserter Animation */
@@ -88,12 +88,12 @@
 .chip-live {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
+  gap: var(--space-2xs);
+  padding: 0.25rem 0.75rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.75);
   background: rgba(0, 0, 0, 0.12);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   white-space: nowrap;
 }
 
@@ -117,12 +117,12 @@
 
 /* Back-Button */
 .btn-back {
-  padding: 6px 14px;
+  padding: 0.375rem 0.875rem;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: #fff;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);

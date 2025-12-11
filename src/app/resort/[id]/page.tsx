@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
-import { WeatherIcon, WeatherIconVariant } from "@/components/WeatherIcon";
+import { WeatherIcon } from "@/components/WeatherIcon";
 import { WeatherOverlayMap } from "@/components/WeatherOverlayMap";
+import { WebcamModal } from "@/components/WebcamModal";
 import { fetchSingleResort, fetchSingleResortForecast } from "@/lib/api";
 import { fallbackImage, formatDate, formatForecastDate, isFresh } from "@/lib/format";
+import { resolveWeatherIconVariant } from "@/lib/weatherIcon";
 import {
   formatWeatherRating,
   normalizeWeatherRating,
@@ -41,36 +43,8 @@ async function loadResortForecast(id: string): Promise<WeatherForecast[]> {
 
 type Props = { params: { id: string } };
 
-function resolveWeatherIcon(day: WeatherForecast): WeatherIconVariant {
-  const code = day.weather_code;
-
-  if (typeof code === "number") {
-    if (code === 0) return "sunny";
-    if (code === 1 || code === 2) return "partlycloudy";
-    if (code === 3) return "mostlycloudy";
-    if (code === 45 || code === 48) return "fog";
-    if ([51, 53, 55, 56, 57].includes(code)) return "rain";
-    if ([61, 63, 65, 80, 81, 82].includes(code)) return "rain";
-    if ([66, 67].includes(code)) return "sleet";
-    if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
-    if ([95, 96, 99].includes(code)) return "tstorms";
-  }
-
-  const description = (day.weather_description ?? "").toLowerCase();
-  if (description.includes("thunder") || description.includes("gewit")) return "tstorms";
-  if (description.includes("sleet") || description.includes("eisregen")) return "sleet";
-  if (description.includes("flurries")) return "flurries";
-  if (description.includes("snow") || description.includes("schnee")) return "snow";
-  if (description.includes("rain") || description.includes("regen") || description.includes("shower"))
-    return "rain";
-  if (description.includes("fog") || description.includes("nebel") || description.includes("haze"))
-    return "fog";
-  if (description.includes("cloud") || description.includes("bewölkt") || description.includes("overcast"))
-    return "mostlycloudy";
-  if (description.includes("sun") || description.includes("klar") || description.includes("clear"))
-    return "sunny";
-
-  return "partlycloudy";
+function resolveWeatherIcon(day: WeatherForecast) {
+  return resolveWeatherIconVariant(day.weather_code, day.weather_description);
 }
 
 export default async function ResortDetail({ params }: Props) {
@@ -83,6 +57,100 @@ export default async function ResortDetail({ params }: Props) {
 
   const fresh = isFresh(resort.last_update);
   const weatherRating = normalizeWeatherRating(resort.weather_rating);
+  const heroImage = fallbackImage(resort.image_url);
+  const locationLabel = [resort.state, resort.country].filter(Boolean).join(" · ");
+  const locationDisplay = locationLabel.length > 0 ? locationLabel : "Standort unbekannt";
+  const coordinatesLabel =
+    Number.isFinite(resort.lat) && Number.isFinite(resort.lon)
+      ? `${resort.lat.toFixed(2)}°, ${resort.lon.toFixed(2)}°`
+      : "—";
+  const currentIcon = resolveWeatherIconVariant(undefined, resort.weather_description);
+  const hasFreshSnow = typeof resort.snow_new_cm === "number" && resort.snow_new_cm >= 5;
+  const hasDeepBase = typeof resort.snow_depth_cm === "number" && resort.snow_depth_cm >= 120;
+  const strongWind = typeof resort.wind_kmh === "number" && resort.wind_kmh >= 45;
+  const mildWind = typeof resort.wind_kmh === "number" && resort.wind_kmh <= 20;
+  const warmTemp = typeof resort.temp_c === "number" && resort.temp_c >= 3;
+  const frigidTemp = typeof resort.temp_c === "number" && resort.temp_c <= -8;
+  const staleData = !fresh;
+  const upcomingSnowDay = forecast.find((day) => (day.snow_forecast_cm ?? 0) >= 5);
+  const calmWindow = forecast.find((day) => typeof day.wind_kmh === "number" && day.wind_kmh <= 20);
+  const warmWindow = forecast.find((day) => typeof day.temp_max_c === "number" && (day.temp_max_c ?? 0) >= 5);
+
+  const intelligenceInsights: { title: string; detail: string }[] = [];
+
+  if (hasFreshSnow && mildWind) {
+    intelligenceInsights.push({
+      title: "Powder & ruhig",
+      detail: `${resort.snow_new_cm} cm Neuschnee treffen auf nur ${resort.wind_kmh ?? "?"} km/h Wind – früh raus für butterweiche Lines.`,
+    });
+  } else if (hasFreshSnow) {
+    intelligenceInsights.push({
+      title: "Powderfenster",
+      detail: `${resort.snow_new_cm} cm Neuschnee in 24h. Nutze windgeschützte Hänge für beste Sicht.`,
+    });
+  }
+
+  if (hasDeepBase && !warmTemp) {
+    intelligenceInsights.push({
+      title: "Tiefe Basis",
+      detail: `Schneehöhe bei ${resort.snow_depth_cm} cm – ideale Grundlage für längere Touren & Variantenabfahrten.`,
+    });
+  }
+
+  if (strongWind && !hasFreshSnow) {
+    intelligenceInsights.push({
+      title: "Wind-Alert",
+      detail: `Aktuell ${resort.wind_kmh} km/h. Plane windarme Zonen oder spätere Liftenstarts ein.`,
+    });
+  } else if (mildWind && warmTemp) {
+    intelligenceInsights.push({
+      title: "Frühjahrsgefühl",
+      detail: `Nur ${resort.wind_kmh ?? 0} km/h Wind und ${resort.temp_c ?? 0}°C – vormittags top, nachmittags wird's weich.`,
+    });
+  }
+
+  if (frigidTemp && hasDeepBase) {
+    intelligenceInsights.push({
+      title: "Scharfe Kälte",
+      detail: `${resort.temp_c}°C halten den Basepack hart – Kanten checken & Layer vorbereiten.`,
+    });
+  }
+
+  if (staleData) {
+    intelligenceInsights.push({
+      title: "Update empfohlen",
+      detail: "Daten älter als 60 Minuten. Kurz vor Abfahrt erneut abrufen für finale Planung.",
+    });
+  }
+
+  if (upcomingSnowDay && (!hasFreshSnow || strongWind)) {
+    intelligenceInsights.push({
+      title: "Nächster Schneeschub",
+      detail: `${formatForecastDate(upcomingSnowDay.forecast_date)} werden bis zu ${upcomingSnowDay.snow_forecast_cm ?? "?"} cm erwartet – Reise ggf. dahin timen.`,
+    });
+  }
+
+  if (calmWindow && strongWind) {
+    intelligenceInsights.push({
+      title: "Ruhephase",
+      detail: `${formatForecastDate(calmWindow.forecast_date)} fällt der Wind auf ${calmWindow.wind_kmh ?? "?"} km/h – Shuttle/Heli-Slots dort planen.`,
+    });
+  }
+
+  if (warmWindow && !warmTemp) {
+    intelligenceInsights.push({
+      title: "Mildes Zeitfenster",
+      detail: `${formatForecastDate(warmWindow.forecast_date)} steigt die Max-Temperatur auf ${warmWindow.temp_max_c ?? "?"}°C – Slush Runs gegen Nachmittag einkalkulieren.`,
+    });
+  }
+
+  if (intelligenceInsights.length === 0) {
+    intelligenceInsights.push({
+      title: "Standardlage",
+      detail: "Keine Extremwerte in Sicht – Fokus auf klassische Routen und frühe Startzeiten.",
+    });
+  }
+  const heroIntel = intelligenceInsights.slice(0, 2);
 
   return (
     <>
@@ -96,19 +164,13 @@ export default async function ResortDetail({ params }: Props) {
           <div className="detail-banner">
             <div className="detail-banner__body">
               <div className="detail-kicker">Live-Daten</div>
-              <h1 className="detail-title">{resort.name ?? "Unbekanntes Gebiet"}</h1>
-              <p className="detail-lede">{resort.weather_description ?? "Keine Wetterdaten verfügbar"}</p>
-              <div className="detail-banner__meta">
-                <div className="pill">Land: <strong>{resort.country ?? "—"}</strong></div>
-                <div className="pill">Bundesland/Kanton: <strong>{resort.state ?? "—"}</strong></div>
-              </div>
-              <div className="detail-badges">
-                <div
-                  className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
-                  aria-label="Aktuelle Bedingungen"
-                >
-                  Bedingungen: <strong>{formatWeatherRating(resort.weather_rating)}</strong>
-                </div>
+              <h1 className="detail-title">
+                {resort.name ?? "Unbekanntes Gebiet"}
+                {resort.state ? <span className="detail-title__location">, {resort.state}</span> : null}
+              </h1>
+              <div className="detail-conditions-row">
+                <WeatherIcon variant={currentIcon} label={resort.weather_description ?? "Wetter"} />
+                <p className="detail-lede">{resort.weather_description ?? "Keine Wetterdaten verfügbar"}</p>
               </div>
               <div className="detail-stats-grid detail-stats-grid--inline">
                 <div className="stat">
@@ -141,6 +203,17 @@ export default async function ResortDetail({ params }: Props) {
                     {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
                   </div>
                 </div>
+                <div className="stat">
+                  <div className="stat-label">Bedingungen</div>
+                  <div className="stat-value stat-value--pill">
+                    <span
+                      className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
+                      aria-label="Aktuelle Bedingungen"
+                    >
+                      {formatWeatherRating(resort.weather_rating)}
+                    </span>
+                  </div>
+                </div>
               </div>
               <div className="detail-banner__footer">
                 <span className="detail-banner__footer-text">
@@ -150,15 +223,26 @@ export default async function ResortDetail({ params }: Props) {
             </div>
             <div className="detail-media">
               <div className="detail-image-wrapper">
-                <img
-                  className="detail-banner__image"
-                  src={fallbackImage(resort.image_url)}
-                  alt="Bild des Skigebiets"
-                />
+                <WebcamModal imageSrc={heroImage} resortName={resort.name} />
               </div>
-              <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
+              {heroIntel.length > 0 ? (
+                <div className="detail-intelligence">
+                  <div className="detail-intelligence__label">SkiRadar Intelligence</div>
+                  <ul className="detail-intelligence__list">
+                    {heroIntel.map((tip) => (
+                      <li key={tip.title}>
+                        <strong>{tip.title}:</strong> {tip.detail}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           </div>
+
+          <section className="detail-map-section" aria-label="Interaktive Wetterkarte">
+            <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
+          </section>
 
           <div className="detail-card detail-forecast">
             <div className="detail-card__header">
