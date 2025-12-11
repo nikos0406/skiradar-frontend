@@ -28,6 +28,9 @@
   --spacing-md: 12px;
   --spacing-lg: 16px;
   --spacing-xl: 24px;
+  --space-section: 16px;
+  --space-card: 16px;
+  --space-gap: 12px;
   
   /* Radius */
   --radius-sm: 4px;

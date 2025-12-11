@@ -2,15 +2,15 @@
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 18px var(--spacing-lg) 40px;
+  padding: var(--space-section) var(--spacing-lg) 40px;
 }
 
 .landing-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) 0.9fr;
-  gap: 18px;
+  gap: var(--space-section);
   align-items: center;
-  margin: 12px 0 24px;
+  margin: var(--space-gap) 0 var(--space-section);
 }
 
 .landing-hero__content h1 {
@@ -228,8 +228,8 @@
 .landing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
-  margin-top: 18px;
+  gap: var(--space-gap);
+  margin-top: var(--space-section);
 }
 
 .landing-tile {

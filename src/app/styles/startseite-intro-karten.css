@@ -1,11 +1,11 @@
 .intro-card {
-  margin-top: 14px;
-  margin-bottom: 10px;
+  margin-top: var(--space-section);
+  margin-bottom: var(--space-gap);
   background: rgba(255, 255, 255, 0.96);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(148, 163, 184, 0.25);
   box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
-  padding: 12px 14px;
+  padding: var(--space-card);
   backdrop-filter: blur(8px);
 }
 
@@ -27,7 +27,7 @@
 #resorts {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
-  gap: 10px;
+  gap: var(--space-gap);
 }
 
 /* Card mit Verbesserungen */
@@ -115,7 +115,7 @@
 }
 
 .content {
-  padding: 10px var(--spacing-md);
+  padding: var(--space-gap);
 }
 
 .title-row {
@@ -141,7 +141,7 @@
 }
 
 .rows {
-  margin-top: 6px;
+  margin-top: var(--spacing-sm);
 }
 
 .row {

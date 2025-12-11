@@ -506,7 +506,7 @@
 .detail-shell {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--spacing-sm);
 }
 
 .detail-breadcrumb a {
@@ -521,12 +521,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
   grid-template-areas: "body media";
-  gap: 10px;
+  gap: var(--space-gap);
   align-items: stretch;
   background: var(--card-bg);
   border: 1px solid var(--border-light);
   border-radius: 12px;
-  padding: 14px;
+  padding: var(--space-card);
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
   overflow: hidden;
 }
@@ -725,7 +725,7 @@
 }
 
 .detail-map-section {
-  margin-top: 10px;
+  margin-top: var(--spacing-sm);
 }
 
 @media (max-width: 960px) {
@@ -749,7 +749,7 @@
   grid-area: body;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-gap);
   padding: 6px 2px;
 }
 
@@ -887,8 +887,14 @@
 .detail-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 10px;
+  gap: var(--spacing-sm);
   align-items: start;
+}
+
+.detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .detail-card {
@@ -927,12 +933,12 @@
 }
 
 .detail-stats-grid--inline {
-  margin-top: 14px;
+  margin-top: var(--space-gap);
 }
 
 .detail-intelligence {
-  margin-top: 12px;
-  padding: 12px;
+  margin-top: var(--space-gap);
+  padding: var(--spacing-md);
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.35);
   background: #f8fafc;
@@ -971,7 +977,7 @@
 }
 
 .detail-forecast {
-  margin-top: 10px;
+  margin-top: var(--spacing-sm);
 }
 
 .forecast-grid {
