@@ -2,7 +2,7 @@
   background: #2778c0;
   color: #fff;
   box-shadow: var(--shadow-header);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
   margin-top: calc(env(safe-area-inset-top, 0px) * -1);
   position: sticky;
   top: 0;

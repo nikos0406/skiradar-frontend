@@ -6,6 +6,10 @@
   gap: var(--space-xl);
 }
 
+.page > *:first-child {
+  margin-top: 0;
+}
+
 /* Standard-Container */
 .container {
   width: 100%;
