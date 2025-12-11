@@ -1,27 +1,28 @@
 @media (max-width: 768px) {
   :root {
-    --spacing-lg: 12px;
-    --spacing-xl: 18px;
+    --space-lg: 1.25rem;
+    --space-xl: 1.75rem;
+    --space-2xl: 2.5rem;
   }
 }
 
 @media (max-width: 640px) {
   .page {
-    padding: 0 var(--spacing-md) calc(var(--spacing-xl) * 1.2);
+    padding: 0 var(--space-sm) var(--space-xl);
   }
 
   .container {
-    margin-top: 14px;
-    padding: 18px 14px;
+    margin-top: var(--space-sm);
+    padding: var(--space-md) var(--space-sm);
   }
 
   .intro-card {
-    margin-top: 14px;
-    padding: var(--spacing-md);
+    margin-top: var(--space-sm);
+    padding: var(--space-md);
   }
 
   .intro-title {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
   }
 
   .header-inner {
@@ -29,9 +30,9 @@
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    gap: var(--spacing-sm);
-    min-height: 56px;
-    padding: 8px var(--spacing-lg);
+    gap: var(--space-xs);
+    min-height: 3.25rem;
+    padding: var(--space-2xs) var(--space-md);
   }
 
   .header-brand {
@@ -44,19 +45,19 @@
     width: auto;
     align-self: center;
     justify-content: flex-end;
-    gap: var(--spacing-sm);
-    font-size: 12px;
+    gap: var(--space-xs);
+    font-size: var(--font-size-sm);
     order: 0;
     margin-bottom: 0;
   }
 
   .header-text-main {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
     letter-spacing: 0.04em;
   }
 
   .header-text-sub {
-    font-size: 12px;
+    font-size: var(--font-size-sm);
   }
 
   .header-logo {
@@ -65,19 +66,19 @@
   }
 
   .chip-live {
-    padding: 4px 10px;
-    font-size: 12px;
-    gap: 6px;
+    padding: 0.25rem var(--space-sm);
+    font-size: var(--font-size-sm);
+    gap: var(--space-2xs);
   }
 
   .btn-back {
     width: auto;
-    padding: 8px 16px;
+    padding: 0.5rem var(--space-md);
   }
 
   #resorts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--spacing-lg);
+    gap: var(--space-md);
   }
 
   #resorts .card {
@@ -87,8 +88,8 @@
   .resort-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
-    padding: var(--spacing-md) 0;
+    gap: var(--space-2xs);
+    padding: var(--space-sm) 0;
   }
 
   .hub-actions {
@@ -98,19 +99,19 @@
 
 @media (max-width: 420px) {
   .header-inner {
-    padding: 6px var(--spacing-md);
-    min-height: 50px;
+    padding: var(--space-3xs) var(--space-sm);
+    min-height: 3rem;
     align-items: center;
     justify-content: space-between;
-    gap: var(--spacing-xs);
+    gap: var(--space-3xs);
   }
 
   .header-text-main {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
   }
 
   .header-text-sub {
-    font-size: 11px;
+    font-size: var(--font-size-2xs);
   }
 
   #resorts {
