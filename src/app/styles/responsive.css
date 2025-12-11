@@ -506,7 +506,7 @@
 .detail-shell {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .detail-breadcrumb a {
@@ -521,7 +521,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
   grid-template-areas: "body media";
-  gap: 14px;
+  gap: 10px;
   align-items: stretch;
   background: var(--card-bg);
   border: 1px solid var(--border-light);
@@ -658,7 +658,7 @@
 }
 
 .detail-map-section {
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 @media (max-width: 960px) {
@@ -820,7 +820,7 @@
 .detail-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 12px;
+  gap: 10px;
   align-items: start;
 }
 
@@ -904,7 +904,7 @@
 }
 
 .detail-forecast {
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 .forecast-grid {
