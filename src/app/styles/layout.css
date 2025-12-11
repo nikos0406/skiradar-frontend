@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 0 var(--spacing-lg) 32px;
+  padding: 18px var(--spacing-lg) 26px;
 }
 
 /* Standard-Container */
@@ -10,22 +10,22 @@
   width: 100%;
   max-width: 720px;
   background: var(--card-bg);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: var(--shadow-soft);
-  padding: 20px 18px;
-  margin: 18px auto 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  padding: 18px 16px;
+  margin: 12px auto 0;
 }
 
 /* Container-Varianten */
 .container--narrow {
   max-width: 420px;
-  padding: var(--spacing-xl) 22px 28px;
+  padding: 24px 20px 26px;
 }
 
 .container--medium {
   max-width: 560px;
-  padding: var(--spacing-xl) 20px;
+  padding: 24px 18px;
 }
 
 .container--compact {
