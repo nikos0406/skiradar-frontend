@@ -8,7 +8,7 @@ export default function LandingPage() {
       <div className="landing">
         <section className="landing-hero">
           <div className="landing-hero__content">
-            <div className="landing-badge">Live Beta</div>
+            <div className="landing-badge">Live</div>
             <h1>Die schlanke Übersicht für deine Skitage</h1>
             <p>
               Temperatur, Neuschnee, Wind und Webcams – automatisch aktualisiert für deine
@@ -52,7 +52,7 @@ export default function LandingPage() {
               <li>
                 <div>
                   <div className="item-label">Filtern & sortieren</div>
-                  <div className="item-value">Favoriten im Blick</div>
+                  <div className="item-value">Favoriten im Blick (Coming soon)</div>
                 </div>
                 <span className="item-badge">Klar</span>
               </li>

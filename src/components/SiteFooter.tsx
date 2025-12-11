@@ -9,7 +9,7 @@ export function SiteFooter() {
         <div className="footer-brand">
           <div className="footer-title">SkiRadar</div>
           <p className="footer-desc">
-            Live-Daten zu Schnee, Wetter und Webcams aus deinen favorisierten Skigebieten.
+            Live-Daten zu Schnee, Wetter und Webcams.
           </p>
           <span className="footer-meta">© {year} SkiRadar</span>
         </div>

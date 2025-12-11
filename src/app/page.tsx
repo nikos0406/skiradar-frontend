@@ -31,8 +31,7 @@ export default async function HomePage() {
         <section className="intro-card">
           <h1 className="intro-title">Skigebiete & Bedingungen</h1>
           <p className="intro-subtitle">
-            Temperatur, Schneehöhen, Neuschnee &amp; Wind – automatisch aktualisiert aus deinen
-            hinterlegten Skigebieten.
+            Temperatur, Schneehöhen, Neuschnee &amp; Wind – automatisch aktualisiert
           </p>
         </section>
 
