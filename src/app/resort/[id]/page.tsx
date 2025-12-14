@@ -200,12 +200,6 @@ export default async function ResortDetail({ params }: Props) {
                   </div>
                 </div>
                 <div className="stat">
-                  <div className="stat-label">Schneehöhe gestern</div>
-                  <div className="stat-value">
-                    {resort.snow_depth_yesterday_cm ?? "—"}<span className="unit">cm</span>
-                  </div>
-                </div>
-                <div className="stat">
                   <div className="stat-label">Bedingungen</div>
                   <div className="stat-value stat-value--pill">
                     <span
