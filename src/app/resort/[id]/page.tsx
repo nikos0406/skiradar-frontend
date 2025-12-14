@@ -242,10 +242,6 @@ export default async function ResortDetail({ params }: Props) {
             </div>
           </div>
 
-          <section className="detail-map-section" aria-label="Interaktive Wetterkarte">
-            <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
-          </section>
-
           <div className="detail-card detail-forecast">
             <div className="detail-card__header">
               <div>
@@ -305,6 +301,11 @@ export default async function ResortDetail({ params }: Props) {
               )}
             </div>
           </div>
+
+          <section className="detail-map-section" aria-label="Interaktive Wetterkarte">
+            <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
+          </section>
+
         </div>
       </main>
     </>
