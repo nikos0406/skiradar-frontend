@@ -65,6 +65,11 @@ export function ShareButton({ resortName }: Props) {
   return (
     <div className="detail-banner__share" aria-live="polite">
       <button type="button" className="detail-banner__share-button" onClick={handleShare} aria-label="SkiRadar Link teilen">
+        <span className="detail-banner__share-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+            <path d="M18 8a3 3 0 1 0-2.82-4 3 3 0 0 0 .06.59L8.91 8.36a3 3 0 1 0 0 3.28l6.33 3.76a3 3 0 1 0 .91-1.4l-6.32-3.76a3.16 3.16 0 0 0 0-.72l6.33-3.76A3 3 0 0 0 18 8Z" />
+          </svg>
+        </span>
         Teilen
       </button>
       {feedback ? <span className="detail-banner__share-feedback">{feedback}</span> : null}
