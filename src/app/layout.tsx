@@ -18,7 +18,9 @@ import "./styles/responsive.css";
 import "./styles/footer.css";
 import "./styles/landing-page.css";
 import "./styles/weather-icons.css";
+import "./styles/cookie-banner.css";
 import { SiteFooter } from "@/components/SiteFooter";
+import { CookieDisclaimer } from "@/components/CookieDisclaimer";
 
 export const metadata: Metadata = {
   title: "SkiRadar",
@@ -43,6 +45,7 @@ export default function RootLayout({
       <body>
         {children}
         <SiteFooter />
+        <CookieDisclaimer />
       </body>
     </html>
   );
