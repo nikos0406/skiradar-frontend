@@ -383,8 +383,8 @@ export function ResortList({ initialPage }: Props) {
             {sortedResorts.map((resort) => (
               <ResortCard key={resort.id} resort={resort} />
             ))}
-            <div style={{ marginTop: 24, textAlign: "center" }}>
-              {hasMore ? (
+            {hasMore ? (
+              <div className="resorts-load-more">
                 <button
                   className="btn"
                   type="button"
@@ -393,13 +393,8 @@ export function ResortList({ initialPage }: Props) {
                 >
                   {loadingMore ? "Lade weitere..." : "Mehr laden"}
                 </button>
-              ) : (
-                <div style={{ color: "#6b7280", fontSize: 14 }}>Alle Skigebiete geladen.</div>
-              )}
-              <div style={{ marginTop: 8, color: "#6b7280", fontSize: 14 }}>
-                {Math.min(resorts.length, total)} / {total} Skigebiete
               </div>
-            </div>
+            ) : null}
           </>
         )}
       </main>
