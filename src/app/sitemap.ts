@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     resortEntries = resorts
       .filter((resort) => typeof resort.id === "number")
       .map((resort) => ({
-        url: absoluteUrl(`/resort/${resort.id}`),
+        url: absoluteUrl(`/wetter/${resort.id}`),
         lastModified: resort.last_update ? new Date(resort.last_update) : now,
         changeFrequency: "daily",
         priority: 0.7,

@@ -53,7 +53,7 @@ function resolveWeatherIcon(day: WeatherForecast) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await Promise.resolve(params);
   const resort = await loadResort(id);
-  const canonicalPath = resort?.id ? `/resort/${resort.id}` : `/resort/${id}`;
+  const canonicalPath = resort?.id ? `/wetter/${resort.id}` : `/wetter/${id}`;
   const canonicalUrl = absoluteUrl(canonicalPath);
 
   if (!resort) {
@@ -203,7 +203,7 @@ export default async function ResortDetail({ params }: Props) {
     });
   }
   const heroIntel = intelligenceInsights.slice(0, 2);
-  const canonicalUrl = absoluteUrl(resort.id ? `/resort/${resort.id}` : `/resort/${id}`);
+  const canonicalUrl = absoluteUrl(resort.id ? `/wetter/${resort.id}` : `/wetter/${id}`);
   const resortSchema = {
     "@context": "https://schema.org",
     "@type": "SkiResort",
