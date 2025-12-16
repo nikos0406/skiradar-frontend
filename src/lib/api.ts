@@ -1,5 +1,5 @@
 import { WeatherForecast } from "@/types/forecast";
-import { SkiResort } from "@/types/resort";
+import { PaginatedSkiResortList, SkiResort } from "@/types/resort";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(
   /\/$/,
@@ -52,9 +52,48 @@ export async function fetchSingleResortForecast(resortId: number) {
   return parseResponse<WeatherForecast[]>(response);
 }
 
-export async function fetchResorts() {
-  const response = await fetch(buildUrl(`/api/resorts/list`), defaultInit);
-  return parseResponse<SkiResort[]>(response);
+export type FetchResortsParams = {
+  limit?: number;
+  offset?: number;
+  search?: string;
+  country?: string;
+  state?: string;
+  weather_rating?: string;
+};
+
+function serializeParams(params?: FetchResortsParams) {
+  if (!params) return "";
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+    searchParams.set(key, String(value));
+  });
+  const query = searchParams.toString();
+  return query ? `?${query}` : "";
+}
+
+export async function fetchResorts(params?: FetchResortsParams) {
+  const response = await fetch(buildUrl(`/api/resorts/list${serializeParams(params)}`), defaultInit);
+  return parseResponse<PaginatedSkiResortList>(response);
+}
+
+export async function fetchAllResorts(
+  params?: Omit<FetchResortsParams, "offset"> & { offset?: never },
+): Promise<SkiResort[]> {
+  const limit = params?.limit ?? 100;
+  let offset = 0;
+  const aggregated: SkiResort[] = [];
+
+  while (true) {
+    const page = await fetchResorts({ ...params, limit, offset });
+    aggregated.push(...page.items);
+    if (aggregated.length >= page.total || page.items.length === 0) {
+      break;
+    }
+    offset += page.limit;
+  }
+
+  return aggregated;
 }
 
 export async function adminLogin(username: string, password: string) {

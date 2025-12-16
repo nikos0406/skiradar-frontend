@@ -12,7 +12,7 @@ async function loadResorts() {
 }
 
 export default async function HomePage() {
-  const resorts = await loadResorts();
+  const page = await loadResorts();
 
   return (
     <>
@@ -35,12 +35,12 @@ export default async function HomePage() {
           </p>
         </section>
 
-        {!resorts ? (
+        {!page ? (
           <div className="empty">Fehler beim Laden der Skigebiete.</div>
-        ) : resorts.length === 0 ? (
+        ) : page.items.length === 0 ? (
           <div className="empty">Noch keine Skigebiete hinzugefügt.</div>
         ) : (
-          <ResortList resorts={resorts} />
+          <ResortList initialPage={page} />
         )}
       </div>
     </>

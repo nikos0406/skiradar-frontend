@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
-import { checkAdminSession, fetchResorts, normalizeWebcamUrl, updateResort } from "@/lib/api";
+import { checkAdminSession, fetchAllResorts, normalizeWebcamUrl, updateResort } from "@/lib/api";
 import { SkiResort } from "@/types/resort";
 
 export default function UpdateResortPage() {
@@ -19,7 +19,7 @@ export default function UpdateResortPage() {
       try {
         await checkAdminSession();
         setAuthorized(true);
-        const data = await fetchResorts();
+        const data = await fetchAllResorts();
         setResorts(data);
       } catch (error) {
         console.error(error);

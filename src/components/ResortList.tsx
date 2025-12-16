@@ -1,8 +1,9 @@
 'use client';
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { SkiResort } from "@/types/resort";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { fetchResorts } from "@/lib/api";
+import { PaginatedSkiResortList, SkiResort } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
 import {
   WEATHER_RATING_KEYS,
@@ -13,7 +14,7 @@ import {
   weatherRatingScore,
 } from "@/lib/weatherRating";
 
-type Props = { resorts: SkiResort[] };
+type Props = { initialPage: PaginatedSkiResortList };
 
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
@@ -82,13 +83,66 @@ function ResortCard({ resort }: { resort: SkiResort }) {
   );
 }
 
-export function ResortList({ resorts }: Props) {
+export function ResortList({ initialPage }: Props) {
+  const defaultLimit = initialPage.limit || 16;
+  const [resorts, setResorts] = useState<SkiResort[]>(initialPage.items);
+  const [total, setTotal] = useState(initialPage.total);
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [weatherRatingFilter, setWeatherRatingFilter] = useState<(typeof WEATHER_RATING_KEYS)[number] | "">("");
   const [sortBy, setSortBy] = useState<"name" | "temp" | "wind" | "rating">("name");
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handle = window.setTimeout(() => setDebouncedQuery(query.trim()), 350);
+    return () => window.clearTimeout(handle);
+  }, [query]);
+
+  const filters = useMemo(
+    () => ({
+      search: debouncedQuery || undefined,
+      state: stateFilter || undefined,
+      country: countryFilter || undefined,
+      weather_rating: weatherRatingFilter || undefined,
+    }),
+    [debouncedQuery, stateFilter, countryFilter, weatherRatingFilter],
+  );
+
+  const initialFetch = useRef(true);
+  useEffect(() => {
+    if (initialFetch.current) {
+      initialFetch.current = false;
+      return;
+    }
+    let cancelled = false;
+
+    async function refreshList() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetchResorts({ ...filters, limit: defaultLimit, offset: 0 });
+        if (cancelled) return;
+        setResorts(response.items);
+        setTotal(response.total);
+      } catch (err) {
+        if (cancelled) return;
+        setError((err as Error).message || "Fehler beim Laden der Skigebiete.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    refreshList();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filters, defaultLimit]);
 
   const states = useMemo(
     () =>
@@ -115,18 +169,9 @@ export function ResortList({ resorts }: Props) {
     return WEATHER_RATING_KEYS.filter((rating) => set.has(rating));
   }, [resorts]);
 
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    const base = resorts.filter((resort) => {
-      const matchesName = term ? resort.name.toLowerCase().includes(term) : true;
-      const matchesState = stateFilter ? resort.state === stateFilter : true;
-      const matchesCountry = countryFilter ? resort.country === countryFilter : true;
-      const normalizedRating = normalizeWeatherRating(resort.weather_rating);
-      const matchesRating = weatherRatingFilter ? normalizedRating === weatherRatingFilter : true;
-      return matchesName && matchesState && matchesCountry && matchesRating;
-    });
-
-    return [...base].sort((a, b) => {
+  const sortedResorts = useMemo(() => {
+    const list = [...resorts];
+    return list.sort((a, b) => {
       if (sortBy === "name") return a.name.localeCompare(b.name);
       if (sortBy === "temp") return (b.temp_c ?? -Infinity) - (a.temp_c ?? -Infinity);
       if (sortBy === "wind") return (b.wind_kmh ?? -Infinity) - (a.wind_kmh ?? -Infinity);
@@ -135,9 +180,25 @@ export function ResortList({ resorts }: Props) {
       }
       return 0;
     });
-  }, [resorts, query, stateFilter, countryFilter, weatherRatingFilter, sortBy]);
+  }, [resorts, sortBy]);
 
   const hasFilterOptions = states.length > 0 || countries.length > 0 || weatherRatings.length > 0;
+  const hasMore = resorts.length < total;
+
+  async function handleLoadMore() {
+    if (loading || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    setError(null);
+    try {
+      const next = await fetchResorts({ ...filters, limit: defaultLimit, offset: resorts.length });
+      setResorts((prev) => [...prev, ...next.items]);
+      setTotal(next.total);
+    } catch (err) {
+      setError((err as Error).message || "Konnte weitere Skigebiete nicht laden.");
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   return (
     <>
@@ -189,7 +250,7 @@ export function ResortList({ resorts }: Props) {
 
         {hasFilterOptions && showFilters ? (
           <div className="filters-chips" id="filter-options">
-                        {countries.length > 0 ? (
+            {countries.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Land</div>
                 <div className="chip-row">
@@ -213,7 +274,7 @@ export function ResortList({ resorts }: Props) {
                 </div>
               </div>
             ) : null}
-            
+
             {states.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Bundesland/Kanton</div>
@@ -267,13 +328,48 @@ export function ResortList({ resorts }: Props) {
         ) : null}
       </div>
 
+      {error ? (
+        <div className="empty" style={{ marginTop: 12 }}>
+          {error}
+        </div>
+      ) : null}
+
+      {loading && resorts.length > 0 ? (
+        <div style={{ marginTop: 12, textAlign: "center", color: "#6b7280" }}>Aktualisiere Liste…</div>
+      ) : null}
+
       <main id="resorts">
-        {filtered.length === 0 ? (
+        {loading && sortedResorts.length === 0 ? (
+          <div className="empty" style={{ marginTop: 12 }}>
+            Lade Skigebiete...
+          </div>
+        ) : sortedResorts.length === 0 ? (
           <div className="empty" style={{ marginTop: 12 }}>
             Keine Skigebiete gefunden.
           </div>
         ) : (
-          filtered.map((resort) => <ResortCard key={resort.id} resort={resort} />)
+          <>
+            {sortedResorts.map((resort) => (
+              <ResortCard key={resort.id} resort={resort} />
+            ))}
+            <div style={{ marginTop: 24, textAlign: "center" }}>
+              {hasMore ? (
+                <button
+                  className="btn"
+                  type="button"
+                  onClick={handleLoadMore}
+                  disabled={loadingMore || loading}
+                >
+                  {loadingMore ? "Lade weitere..." : "Mehr laden"}
+                </button>
+              ) : (
+                <div style={{ color: "#6b7280", fontSize: 14 }}>Alle Skigebiete geladen.</div>
+              )}
+              <div style={{ marginTop: 8, color: "#6b7280", fontSize: 14 }}>
+                {Math.min(resorts.length, total)} / {total} Skigebiete
+              </div>
+            </div>
+          </>
         )}
       </main>
     </>
