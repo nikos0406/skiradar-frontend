@@ -86,7 +86,7 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
 
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
-  const targetUrl = resort.id != null ? `/resort/${resort.id}` : "/resort";
+  const targetUrl = resort.id != null ? `/wetter/${resort.id}` : "/wetter";
   const rating = normalizeWeatherRating(resort.weather_rating);
 
   return (

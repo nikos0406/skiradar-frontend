@@ -1,5 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SITE_NAME, SITE_TAGLINE, absoluteUrl } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Produktübersicht & Features",
+  description: `${SITE_NAME} liefert ${SITE_TAGLINE} mit Filtern für Länder und Bundesländer sowie klaren Live-Dashboards.`,
+  alternates: {
+    canonical: absoluteUrl("/landing"),
+  },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/landing"),
+    title: `${SITE_NAME} – Produktübersicht`,
+    description: `${SITE_NAME} macht Schneeberichte, Wetter, Wind und Webcams in einem Interface sichtbar.`,
+  },
+};
 
 export default function LandingPage() {
   return (

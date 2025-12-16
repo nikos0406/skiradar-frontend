@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -15,6 +16,7 @@ import {
 } from "@/lib/weatherRating";
 import { SkiResort } from "@/types/resort";
 import { WeatherForecast } from "@/types/forecast";
+import { absoluteUrl, SITE_NAME } from "@/lib/seo";
 
 async function loadResort(id: string): Promise<SkiResort | null> {
   const parsedId = Number(id);
@@ -48,6 +50,54 @@ function resolveWeatherIcon(day: WeatherForecast) {
   return resolveWeatherIconVariant(day.weather_code, day.weather_description);
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await Promise.resolve(params);
+  const resort = await loadResort(id);
+  const canonicalPath = resort?.id ? `/wetter/${resort.id}` : `/wetter/${id}`;
+  const canonicalUrl = absoluteUrl(canonicalPath);
+
+  if (!resort) {
+    return {
+      title: `Skigebiet nicht gefunden | ${SITE_NAME}`,
+      description: "Die angefragten Live-Daten konnten nicht geladen werden.",
+      alternates: { canonical: canonicalUrl },
+    };
+  }
+
+  const locationLabel = [resort.state, resort.country].filter(Boolean).join(", ") || "Alpen";
+  const heroImage = absoluteUrl(fallbackImage(resort.image_url));
+  const description = `Live-Skiwetter, Schneehöhe, Wind & Webcams für ${resort.name ?? "dieses Skigebiet"} (${locationLabel}).`;
+  const title = `${resort.name ?? "Skigebiet"} – Wetter, Schnee & Webcams | ${SITE_NAME}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "article",
+      url: canonicalUrl,
+      title,
+      description,
+      images: [
+        {
+          url: heroImage,
+          width: 1200,
+          height: 675,
+          alt: `${resort.name ?? "Skigebiet"} Panorama`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [heroImage],
+    },
+  };
+}
+
 export default async function ResortDetail({ params }: Props) {
   const { id } = await Promise.resolve(params);
   const [resort, forecast] = await Promise.all([loadResort(id), loadResortForecast(id)]);
@@ -59,6 +109,7 @@ export default async function ResortDetail({ params }: Props) {
   const fresh = isFresh(resort.last_update);
   const weatherRating = normalizeWeatherRating(resort.weather_rating);
   const heroImage = fallbackImage(resort.image_url);
+  const heroImageAbsolute = absoluteUrl(heroImage);
   const locationLabel = [resort.state, resort.country].filter(Boolean).join(" · ");
   const locationDisplay = locationLabel.length > 0 ? locationLabel : "Standort unbekannt";
   const coordinatesLabel =
@@ -152,6 +203,74 @@ export default async function ResortDetail({ params }: Props) {
     });
   }
   const heroIntel = intelligenceInsights.slice(0, 2);
+  const canonicalUrl = absoluteUrl(resort.id ? `/wetter/${resort.id}` : `/wetter/${id}`);
+  const resortSchema = {
+    "@context": "https://schema.org",
+    "@type": "SkiResort",
+    name: resort.name ?? "Skigebiet",
+    description: `Live-Wetter, Schneehöhen und Webcams für ${resort.name ?? "dieses Skigebiet"} in ${locationDisplay}.`,
+    image: heroImageAbsolute,
+    url: canonicalUrl,
+    address: {
+      "@type": "PostalAddress",
+      addressRegion: resort.state ?? "",
+      addressCountry: resort.country ?? "",
+    },
+    geo:
+      Number.isFinite(resort.lat) && Number.isFinite(resort.lon)
+        ? {
+            "@type": "GeoCoordinates",
+            latitude: resort.lat,
+            longitude: resort.lon,
+          }
+        : undefined,
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Skiwetter & Webcams",
+        item: absoluteUrl("/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: resort.name ?? "Skigebiet",
+        item: canonicalUrl,
+      },
+    ],
+  };
+
+  const displayName = resort.name ?? "Dieses Skigebiet";
+  const keywordBase = displayName.trim();
+  const keywordSet = new Set(
+    [
+      `${keywordBase} Wetter`,
+      `${keywordBase} Webcam`,
+      `${keywordBase} Schneehöhe`,
+      `${keywordBase} Schneebericht`,
+      `${keywordBase} Lawinenlage`,
+      `${keywordBase} Livecam`,
+      locationDisplay !== "Standort unbekannt" ? `${keywordBase} Wetter ${locationDisplay.replace(" · ", " ")}` : null,
+    ].filter(Boolean),
+  );
+  const keywordChips = Array.from(keywordSet);
+
+  const metricSnippets = [
+    typeof resort.temp_c === "number" ? `Temperatur liegt bei ${resort.temp_c}°C` : null,
+    typeof resort.snow_depth_cm === "number" ? `Schneehöhe derzeit ${resort.snow_depth_cm} cm` : null,
+    typeof resort.snow_new_cm === "number" ? `${resort.snow_new_cm} cm Neuschnee in 24h` : null,
+    typeof resort.wind_kmh === "number" ? `Windgeschwindigkeit ${resort.wind_kmh} km/h` : null,
+  ].filter(Boolean);
+
+  const seoParagraph =
+    metricSnippets.length > 0
+      ? `${displayName} liefert aktuell: ${metricSnippets.join(", ")}. Wir kombinieren diese Werte mit Wetterradar und HD-Webcams, damit Anfragen wie "${displayName} Wetter" oder "${displayName} Webcam" sofort beantwortet werden.`
+      : `${displayName} wird von SkiRadar mit stündlichen Wetter-, Schnee- und Webcam-Daten versorgt – ideal für Suchanfragen wie "${displayName} Wetter" oder "${displayName} Webcam".`;
 
   return (
     <>
@@ -300,8 +419,28 @@ export default async function ResortDetail({ params }: Props) {
             <WeatherOverlayMap lat={resort.lat} lon={resort.lon} resortName={resort.name} />
           </section>
 
+          <details className="detail-seo" aria-label={`Suchbegriffe zu ${displayName}`}>
+            <summary>
+              <span>Mehr über Wetter &amp; Webcams für {displayName}</span>
+              <span className="detail-seo__chevron" aria-hidden="true">▾</span>
+            </summary>
+            <div className="detail-seo__body">
+              <p>
+                {seoParagraph} Zusätzlich liefern wir Kontext zu Sichtfenstern, Lawinenlage und Powder-Fenstern in {locationDisplay} – perfekt,
+                wenn du gezielt nach Tourenwetter oder Liftstatus suchst.
+              </p>
+              <div className="detail-seo__keywords">
+                {keywordChips.map((phrase) => (
+                  <span key={phrase}>{phrase}</span>
+                ))}
+              </div>
+            </div>
+          </details>
+
         </div>
       </main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(resortSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </>
   );
 }

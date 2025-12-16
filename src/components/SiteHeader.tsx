@@ -41,9 +41,7 @@ export function SiteHeader({ title, subtitle, backHref, action }: Props) {
           </div>
         </Link>
 
-        <div className="header-right">
-          {action}
-        </div>
+        <div className="header-right">{action}</div>
       </div>
     </header>
   );
