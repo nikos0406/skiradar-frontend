@@ -23,3 +23,9 @@ export type PaginatedSkiResortList = {
   limit: number;
   offset: number;
 };
+
+export type ResortFilters = {
+  countries: string[];
+  states: string[];
+  conditions: string[];
+};

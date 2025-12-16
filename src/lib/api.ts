@@ -1,5 +1,5 @@
 import { WeatherForecast } from "@/types/forecast";
-import { PaginatedSkiResortList, SkiResort } from "@/types/resort";
+import { PaginatedSkiResortList, ResortFilters, SkiResort } from "@/types/resort";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(
   /\/$/,
@@ -75,6 +75,11 @@ function serializeParams(params?: FetchResortsParams) {
 export async function fetchResorts(params?: FetchResortsParams) {
   const response = await fetch(buildUrl(`/api/resorts/list${serializeParams(params)}`), defaultInit);
   return parseResponse<PaginatedSkiResortList>(response);
+}
+
+export async function fetchResortFilters() {
+  const response = await fetch(buildUrl("/api/resorts/filters"), defaultInit);
+  return parseResponse<ResortFilters>(response);
 }
 
 export async function fetchAllResorts(

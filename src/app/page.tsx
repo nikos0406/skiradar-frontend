@@ -1,6 +1,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { ResortList } from "@/components/ResortList";
-import { fetchResorts } from "@/lib/api";
+import { fetchResorts, fetchResortFilters } from "@/lib/api";
 
 async function loadResorts() {
   try {
@@ -11,8 +11,17 @@ async function loadResorts() {
   }
 }
 
+async function loadResortFilters() {
+  try {
+    return await fetchResortFilters();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export default async function HomePage() {
-  const page = await loadResorts();
+  const [page, filters] = await Promise.all([loadResorts(), loadResortFilters()]);
 
   return (
     <>
@@ -40,7 +49,7 @@ export default async function HomePage() {
         ) : page.items.length === 0 ? (
           <div className="empty">Noch keine Skigebiete hinzugefügt.</div>
         ) : (
-          <ResortList initialPage={page} />
+          <ResortList initialPage={page} initialFilters={filters ?? undefined} />
         )}
       </div>
     </>
