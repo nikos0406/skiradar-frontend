@@ -113,7 +113,7 @@ function ResortCard({ resort }: { resort: SkiResort }) {
 }
 
 export function ResortList({ initialPage }: Props) {
-  const defaultLimit = initialPage.limit || 16;
+  const defaultLimit = initialPage.limit || 12;
   const [resorts, setResorts] = useState<SkiResort[]>(initialPage.items);
   const [total, setTotal] = useState(initialPage.total);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(() =>
