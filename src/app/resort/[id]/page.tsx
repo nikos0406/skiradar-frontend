@@ -422,7 +422,7 @@ export default async function ResortDetail({ params }: Props) {
           <details className="detail-seo" aria-label={`Suchbegriffe zu ${displayName}`}>
             <summary>
               <span>Mehr über Wetter &amp; Webcams für {displayName}</span>
-              <span className="detail-seo__chevron" aria-hidden="true">⌃</span>
+              <span className="detail-seo__chevron" aria-hidden="true">▾</span>
             </summary>
             <div className="detail-seo__body">
               <p>
