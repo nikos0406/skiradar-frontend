@@ -63,6 +63,27 @@ function buildFilterOptionsFromStatic(filters?: ResortFilters | null): FilterOpt
 
 type Props = { initialPage: PaginatedSkiResortList; initialFilters?: ResortFilters | null };
 
+type SortKey =
+  | "name-asc"
+  | "name-desc"
+  | "temp-asc"
+  | "temp-desc"
+  | "wind-asc"
+  | "wind-desc"
+  | "rating-asc"
+  | "rating-desc";
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "name-asc", label: "Name (A-Z)" },
+  { value: "name-desc", label: "Name (Z-A)" },
+  { value: "temp-desc", label: "Temperatur (Absteigend)" },
+  { value: "temp-asc", label: "Temperatur (Aufsteigend)" },
+  { value: "wind-desc", label: "Wind (Absteigend)" },
+  { value: "wind-asc", label: "Wind (Aufsteigend)" },
+  { value: "rating-desc", label: "Bedingungen (Sehr gut → Schlecht)" },
+  { value: "rating-asc", label: "Bedingungen (Schlecht → Sehr gut)" },
+];
+
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
   const targetUrl = resort.id != null ? `/resort/${resort.id}` : "/resort";
@@ -130,6 +151,19 @@ function ResortCard({ resort }: { resort: SkiResort }) {
   );
 }
 
+function resolveNumericOrder(
+  aValue: number | null | undefined,
+  bValue: number | null | undefined,
+  direction: "asc" | "desc",
+) {
+  const a = typeof aValue === "number" ? aValue : null;
+  const b = typeof bValue === "number" ? bValue : null;
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return direction === "asc" ? a - b : b - a;
+}
+
 export function ResortList({ initialPage, initialFilters }: Props) {
   const defaultLimit = initialPage.limit || 12;
   const [resorts, setResorts] = useState<SkiResort[]>(initialPage.items);
@@ -142,7 +176,7 @@ export function ResortList({ initialPage, initialFilters }: Props) {
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [weatherRatingFilter, setWeatherRatingFilter] = useState<(typeof WEATHER_RATING_KEYS)[number] | "">("");
-  const [sortBy, setSortBy] = useState<"name" | "temp" | "wind" | "rating">("name");
+  const [sortBy, setSortBy] = useState<SortKey>("name-asc");
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -225,13 +259,26 @@ export function ResortList({ initialPage, initialFilters }: Props) {
   const sortedResorts = useMemo(() => {
     const list = [...resorts];
     return list.sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      if (sortBy === "temp") return (b.temp_c ?? -Infinity) - (a.temp_c ?? -Infinity);
-      if (sortBy === "wind") return (b.wind_kmh ?? -Infinity) - (a.wind_kmh ?? -Infinity);
-      if (sortBy === "rating") {
-        return weatherRatingScore(b.weather_rating) - weatherRatingScore(a.weather_rating);
+      switch (sortBy) {
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "temp-asc":
+          return resolveNumericOrder(a.temp_c, b.temp_c, "asc");
+        case "temp-desc":
+          return resolveNumericOrder(a.temp_c, b.temp_c, "desc");
+        case "wind-asc":
+          return resolveNumericOrder(a.wind_kmh, b.wind_kmh, "asc");
+        case "wind-desc":
+          return resolveNumericOrder(a.wind_kmh, b.wind_kmh, "desc");
+        case "rating-asc":
+          return weatherRatingScore(a.weather_rating) - weatherRatingScore(b.weather_rating);
+        case "rating-desc":
+          return weatherRatingScore(b.weather_rating) - weatherRatingScore(a.weather_rating);
+        default:
+          return 0;
       }
-      return 0;
     });
   }, [resorts, sortBy]);
 
@@ -276,12 +323,13 @@ export function ResortList({ initialPage, initialFilters }: Props) {
               <select
                 id="sort"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                onChange={(e) => setSortBy(e.target.value as SortKey)}
               >
-                <option value="name">Name</option>
-                <option value="temp">Temperatur</option>
-                <option value="wind">Wind</option>
-                <option value="rating">Bedingungen</option>
+                {SORT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
