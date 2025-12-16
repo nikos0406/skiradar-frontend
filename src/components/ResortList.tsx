@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fetchResorts } from "@/lib/api";
+import { fetchAllResorts, fetchResorts } from "@/lib/api";
 import { PaginatedSkiResortList, SkiResort } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
 import {
@@ -13,6 +13,35 @@ import {
   weatherRatingClassSuffix,
   weatherRatingScore,
 } from "@/lib/weatherRating";
+
+type FilterOptions = {
+  states: string[];
+  countries: string[];
+  weatherRatings: (typeof WEATHER_RATING_KEYS)[number][];
+};
+
+function sortStrings(values: string[]) {
+  return [...values].sort((a, b) => a.localeCompare(b));
+}
+
+function buildFilterOptions(items: SkiResort[], base?: FilterOptions): FilterOptions {
+  const stateSet = new Set(base?.states ?? []);
+  const countrySet = new Set(base?.countries ?? []);
+  const ratingSet = new Set(base?.weatherRatings ?? []);
+
+  items.forEach((resort) => {
+    if (resort.state) stateSet.add(resort.state);
+    if (resort.country) countrySet.add(resort.country);
+    const rating = normalizeWeatherRating(resort.weather_rating);
+    if (rating) ratingSet.add(rating);
+  });
+
+  return {
+    states: sortStrings(Array.from(stateSet)),
+    countries: sortStrings(Array.from(countrySet)),
+    weatherRatings: WEATHER_RATING_KEYS.filter((rating) => ratingSet.has(rating)),
+  };
+}
 
 type Props = { initialPage: PaginatedSkiResortList };
 
@@ -87,6 +116,9 @@ export function ResortList({ initialPage }: Props) {
   const defaultLimit = initialPage.limit || 16;
   const [resorts, setResorts] = useState<SkiResort[]>(initialPage.items);
   const [total, setTotal] = useState(initialPage.total);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>(() =>
+    buildFilterOptions(initialPage.items),
+  );
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [stateFilter, setStateFilter] = useState("");
@@ -102,6 +134,27 @@ export function ResortList({ initialPage }: Props) {
     const handle = window.setTimeout(() => setDebouncedQuery(query.trim()), 350);
     return () => window.clearTimeout(handle);
   }, [query]);
+
+  useEffect(() => {
+    if (initialPage.items.length >= initialPage.total) return;
+    let cancelled = false;
+
+    async function preloadFilterOptions() {
+      try {
+        const allResorts = await fetchAllResorts();
+        if (cancelled) return;
+        setFilterOptions(buildFilterOptions(allResorts));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    preloadFilterOptions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialPage.items.length, initialPage.total]);
 
   const filters = useMemo(
     () => ({
@@ -129,6 +182,7 @@ export function ResortList({ initialPage }: Props) {
         if (cancelled) return;
         setResorts(response.items);
         setTotal(response.total);
+        setFilterOptions((prev) => buildFilterOptions(response.items, prev));
       } catch (err) {
         if (cancelled) return;
         setError((err as Error).message || "Fehler beim Laden der Skigebiete.");
@@ -144,31 +198,6 @@ export function ResortList({ initialPage }: Props) {
     };
   }, [filters, defaultLimit]);
 
-  const states = useMemo(
-    () =>
-      Array.from(new Set(resorts.map((r) => r.state).filter(Boolean))).sort((a, b) =>
-        (a || "").localeCompare(b || ""),
-      ),
-    [resorts],
-  );
-
-  const countries = useMemo(
-    () =>
-      Array.from(new Set(resorts.map((r) => r.country).filter(Boolean))).sort((a, b) =>
-        (a || "").localeCompare(b || ""),
-      ),
-    [resorts],
-  );
-
-  const weatherRatings = useMemo(() => {
-    const set = new Set<(typeof WEATHER_RATING_KEYS)[number]>();
-    resorts.forEach((resort) => {
-      const rating = normalizeWeatherRating(resort.weather_rating);
-      if (rating) set.add(rating);
-    });
-    return WEATHER_RATING_KEYS.filter((rating) => set.has(rating));
-  }, [resorts]);
-
   const sortedResorts = useMemo(() => {
     const list = [...resorts];
     return list.sort((a, b) => {
@@ -182,6 +211,7 @@ export function ResortList({ initialPage }: Props) {
     });
   }, [resorts, sortBy]);
 
+  const { states, countries, weatherRatings } = filterOptions;
   const hasFilterOptions = states.length > 0 || countries.length > 0 || weatherRatings.length > 0;
   const hasMore = resorts.length < total;
 
@@ -193,6 +223,7 @@ export function ResortList({ initialPage }: Props) {
       const next = await fetchResorts({ ...filters, limit: defaultLimit, offset: resorts.length });
       setResorts((prev) => [...prev, ...next.items]);
       setTotal(next.total);
+      setFilterOptions((prev) => buildFilterOptions(next.items, prev));
     } catch (err) {
       setError((err as Error).message || "Konnte weitere Skigebiete nicht laden.");
     } finally {
