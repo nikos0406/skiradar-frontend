@@ -30,6 +30,20 @@
   gap: var(--space-gap);
 }
 
+.resorts-load-more {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.resorts-load-more .btn {
+  min-width: 200px;
+}
+
 /* Card mit Verbesserungen */
 .card {
   background: #fff;

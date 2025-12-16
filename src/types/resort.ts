@@ -16,3 +16,16 @@ export type SkiResort = {
   last_update?: string | null;
   weather_rating?: string | null;
 };
+
+export type PaginatedSkiResortList = {
+  items: SkiResort[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type ResortFilters = {
+  countries: string[];
+  states: string[];
+  conditions: string[];
+};

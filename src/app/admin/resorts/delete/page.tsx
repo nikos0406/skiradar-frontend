@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
-import { checkAdminSession, deleteResort, fetchResorts } from "@/lib/api";
+import { checkAdminSession, deleteResort, fetchAllResorts } from "@/lib/api";
 import { SkiResort } from "@/types/resort";
 
 export default function DeleteResortPage() {
@@ -18,7 +18,7 @@ export default function DeleteResortPage() {
       try {
         await checkAdminSession();
         setAuthorized(true);
-        const data = await fetchResorts();
+        const data = await fetchAllResorts();
         setResorts(data);
       } catch (error) {
         console.error(error);

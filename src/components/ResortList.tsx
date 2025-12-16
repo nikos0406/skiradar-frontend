@@ -1,8 +1,9 @@
 'use client';
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { SkiResort } from "@/types/resort";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { fetchResorts, fetchResortFilters } from "@/lib/api";
+import { PaginatedSkiResortList, ResortFilters, SkiResort } from "@/types/resort";
 import { fallbackImage, isFresh } from "@/lib/format";
 import {
   WEATHER_RATING_KEYS,
@@ -13,7 +14,75 @@ import {
   weatherRatingScore,
 } from "@/lib/weatherRating";
 
-type Props = { resorts: SkiResort[] };
+type FilterOptions = {
+  states: string[];
+  countries: string[];
+  weatherRatings: (typeof WEATHER_RATING_KEYS)[number][];
+};
+
+function sortStrings(values: string[]) {
+  return [...values].sort((a, b) => a.localeCompare(b));
+}
+
+function buildFilterOptionsFromResorts(items: SkiResort[]): FilterOptions {
+  const stateSet = new Set<string>();
+  const countrySet = new Set<string>();
+  const ratingSet = new Set<(typeof WEATHER_RATING_KEYS)[number]>();
+
+  items.forEach((resort) => {
+    if (resort.state) stateSet.add(resort.state);
+    if (resort.country) countrySet.add(resort.country);
+    const rating = normalizeWeatherRating(resort.weather_rating);
+    if (rating) ratingSet.add(rating);
+  });
+
+  return {
+    states: sortStrings(Array.from(stateSet)),
+    countries: sortStrings(Array.from(countrySet)),
+    weatherRatings: WEATHER_RATING_KEYS.filter((rating) => ratingSet.has(rating)),
+  };
+}
+
+function buildFilterOptionsFromStatic(filters?: ResortFilters | null): FilterOptions {
+  if (!filters) {
+    return { states: [], countries: [], weatherRatings: [] };
+  }
+
+  const ratingSet = new Set<(typeof WEATHER_RATING_KEYS)[number]>();
+  filters.conditions.forEach((condition) => {
+    const normalized = normalizeWeatherRating(condition);
+    if (normalized) ratingSet.add(normalized);
+  });
+
+  return {
+    states: sortStrings(filters.states ?? []),
+    countries: sortStrings(filters.countries ?? []),
+    weatherRatings: WEATHER_RATING_KEYS.filter((rating) => ratingSet.has(rating)),
+  };
+}
+
+type Props = { initialPage: PaginatedSkiResortList; initialFilters?: ResortFilters | null };
+
+type SortKey =
+  | "name-asc"
+  | "name-desc"
+  | "temp-asc"
+  | "temp-desc"
+  | "wind-asc"
+  | "wind-desc"
+  | "rating-asc"
+  | "rating-desc";
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "name-asc", label: "Name (A-Z)" },
+  { value: "name-desc", label: "Name (Z-A)" },
+  { value: "temp-desc", label: "Temperatur (Absteigend)" },
+  { value: "temp-asc", label: "Temperatur (Aufsteigend)" },
+  { value: "wind-desc", label: "Wind (Absteigend)" },
+  { value: "wind-asc", label: "Wind (Aufsteigend)" },
+  { value: "rating-desc", label: "Bedingungen (Sehr gut → Schlecht)" },
+  { value: "rating-asc", label: "Bedingungen (Schlecht → Sehr gut)" },
+];
 
 function ResortCard({ resort }: { resort: SkiResort }) {
   const fresh = isFresh(resort.last_update);
@@ -82,62 +151,155 @@ function ResortCard({ resort }: { resort: SkiResort }) {
   );
 }
 
-export function ResortList({ resorts }: Props) {
+function resolveNumericOrder(
+  aValue: number | null | undefined,
+  bValue: number | null | undefined,
+  direction: "asc" | "desc",
+) {
+  const a = typeof aValue === "number" ? aValue : null;
+  const b = typeof bValue === "number" ? bValue : null;
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return direction === "asc" ? a - b : b - a;
+}
+
+export function ResortList({ initialPage, initialFilters }: Props) {
+  const defaultLimit = initialPage.limit || 12;
+  const [resorts, setResorts] = useState<SkiResort[]>(initialPage.items);
+  const [total, setTotal] = useState(initialPage.total);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>(() =>
+    initialFilters ? buildFilterOptionsFromStatic(initialFilters) : buildFilterOptionsFromResorts(initialPage.items),
+  );
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [weatherRatingFilter, setWeatherRatingFilter] = useState<(typeof WEATHER_RATING_KEYS)[number] | "">("");
-  const [sortBy, setSortBy] = useState<"name" | "temp" | "wind" | "rating">("name");
+  const [sortBy, setSortBy] = useState<SortKey>("name-asc");
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const states = useMemo(
-    () =>
-      Array.from(new Set(resorts.map((r) => r.state).filter(Boolean))).sort((a, b) =>
-        (a || "").localeCompare(b || ""),
-      ),
-    [resorts],
-  );
+  useEffect(() => {
+    const handle = window.setTimeout(() => setDebouncedQuery(query.trim()), 350);
+    return () => window.clearTimeout(handle);
+  }, [query]);
 
-  const countries = useMemo(
-    () =>
-      Array.from(new Set(resorts.map((r) => r.country).filter(Boolean))).sort((a, b) =>
-        (a || "").localeCompare(b || ""),
-      ),
-    [resorts],
-  );
+  useEffect(() => {
+    if (initialFilters) {
+      setFilterOptions(buildFilterOptionsFromStatic(initialFilters));
+      return;
+    }
 
-  const weatherRatings = useMemo(() => {
-    const set = new Set<(typeof WEATHER_RATING_KEYS)[number]>();
-    resorts.forEach((resort) => {
-      const rating = normalizeWeatherRating(resort.weather_rating);
-      if (rating) set.add(rating);
-    });
-    return WEATHER_RATING_KEYS.filter((rating) => set.has(rating));
-  }, [resorts]);
+    let cancelled = false;
 
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    const base = resorts.filter((resort) => {
-      const matchesName = term ? resort.name.toLowerCase().includes(term) : true;
-      const matchesState = stateFilter ? resort.state === stateFilter : true;
-      const matchesCountry = countryFilter ? resort.country === countryFilter : true;
-      const normalizedRating = normalizeWeatherRating(resort.weather_rating);
-      const matchesRating = weatherRatingFilter ? normalizedRating === weatherRatingFilter : true;
-      return matchesName && matchesState && matchesCountry && matchesRating;
-    });
-
-    return [...base].sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      if (sortBy === "temp") return (b.temp_c ?? -Infinity) - (a.temp_c ?? -Infinity);
-      if (sortBy === "wind") return (b.wind_kmh ?? -Infinity) - (a.wind_kmh ?? -Infinity);
-      if (sortBy === "rating") {
-        return weatherRatingScore(b.weather_rating) - weatherRatingScore(a.weather_rating);
+    async function loadStaticFilters() {
+      try {
+        const filters = await fetchResortFilters();
+        if (cancelled) return;
+        setFilterOptions(buildFilterOptionsFromStatic(filters));
+      } catch (error) {
+        console.error(error);
       }
-      return 0;
-    });
-  }, [resorts, query, stateFilter, countryFilter, weatherRatingFilter, sortBy]);
+    }
 
+    loadStaticFilters();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialFilters]);
+
+  const filters = useMemo(() => {
+    const weatherRatingLabel = weatherRatingFilter
+      ? WEATHER_RATING_LABELS[weatherRatingFilter]
+      : undefined;
+
+    return {
+      search: debouncedQuery || undefined,
+      state: stateFilter || undefined,
+      country: countryFilter || undefined,
+      weather_rating: weatherRatingLabel,
+    };
+  }, [debouncedQuery, stateFilter, countryFilter, weatherRatingFilter]);
+
+  const initialFetch = useRef(true);
+  useEffect(() => {
+    if (initialFetch.current) {
+      initialFetch.current = false;
+      return;
+    }
+    let cancelled = false;
+
+    async function refreshList() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetchResorts({ ...filters, limit: defaultLimit, offset: 0 });
+        if (cancelled) return;
+        setResorts(response.items);
+        setTotal(response.total);
+      } catch (err) {
+        if (cancelled) return;
+        setError((err as Error).message || "Fehler beim Laden der Skigebiete.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    refreshList();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filters, defaultLimit]);
+
+  const sortedResorts = useMemo(() => {
+    const list = [...resorts];
+    return list.sort((a, b) => {
+      switch (sortBy) {
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        case "temp-asc":
+          return resolveNumericOrder(a.temp_c, b.temp_c, "asc");
+        case "temp-desc":
+          return resolveNumericOrder(a.temp_c, b.temp_c, "desc");
+        case "wind-asc":
+          return resolveNumericOrder(a.wind_kmh, b.wind_kmh, "asc");
+        case "wind-desc":
+          return resolveNumericOrder(a.wind_kmh, b.wind_kmh, "desc");
+        case "rating-asc":
+          return weatherRatingScore(a.weather_rating) - weatherRatingScore(b.weather_rating);
+        case "rating-desc":
+          return weatherRatingScore(b.weather_rating) - weatherRatingScore(a.weather_rating);
+        default:
+          return 0;
+      }
+    });
+  }, [resorts, sortBy]);
+
+  const { states, countries, weatherRatings } = filterOptions;
   const hasFilterOptions = states.length > 0 || countries.length > 0 || weatherRatings.length > 0;
+  const hasMore = resorts.length < total;
+
+  async function handleLoadMore() {
+    if (loading || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    setError(null);
+    try {
+      const next = await fetchResorts({ ...filters, limit: defaultLimit, offset: resorts.length });
+      setResorts((prev) => [...prev, ...next.items]);
+      setTotal(next.total);
+    } catch (err) {
+      setError((err as Error).message || "Konnte weitere Skigebiete nicht laden.");
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   return (
     <>
@@ -161,12 +323,13 @@ export function ResortList({ resorts }: Props) {
               <select
                 id="sort"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                onChange={(e) => setSortBy(e.target.value as SortKey)}
               >
-                <option value="name">Name</option>
-                <option value="temp">Temperatur</option>
-                <option value="wind">Wind</option>
-                <option value="rating">Bedingungen</option>
+                {SORT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -189,7 +352,7 @@ export function ResortList({ resorts }: Props) {
 
         {hasFilterOptions && showFilters ? (
           <div className="filters-chips" id="filter-options">
-                        {countries.length > 0 ? (
+            {countries.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Land</div>
                 <div className="chip-row">
@@ -213,7 +376,7 @@ export function ResortList({ resorts }: Props) {
                 </div>
               </div>
             ) : null}
-            
+
             {states.length > 0 ? (
               <div className="chip-group">
                 <div className="chip-group-label">Bundesland/Kanton</div>
@@ -267,13 +430,43 @@ export function ResortList({ resorts }: Props) {
         ) : null}
       </div>
 
+      {error ? (
+        <div className="empty" style={{ marginTop: 12 }}>
+          {error}
+        </div>
+      ) : null}
+
+      {loading && resorts.length > 0 ? (
+        <div style={{ marginTop: 12, textAlign: "center", color: "#6b7280" }}>Aktualisiere Liste…</div>
+      ) : null}
+
       <main id="resorts">
-        {filtered.length === 0 ? (
+        {loading && sortedResorts.length === 0 ? (
+          <div className="empty" style={{ marginTop: 12 }}>
+            Lade Skigebiete...
+          </div>
+        ) : sortedResorts.length === 0 ? (
           <div className="empty" style={{ marginTop: 12 }}>
             Keine Skigebiete gefunden.
           </div>
         ) : (
-          filtered.map((resort) => <ResortCard key={resort.id} resort={resort} />)
+          <>
+            {sortedResorts.map((resort) => (
+              <ResortCard key={resort.id} resort={resort} />
+            ))}
+            {hasMore ? (
+              <div className="resorts-load-more">
+                <button
+                  className="btn"
+                  type="button"
+                  onClick={handleLoadMore}
+                  disabled={loadingMore || loading}
+                >
+                  {loadingMore ? "Lade weitere..." : "Mehr laden"}
+                </button>
+              </div>
+            ) : null}
+          </>
         )}
       </main>
     </>
