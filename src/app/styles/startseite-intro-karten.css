@@ -34,11 +34,14 @@
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
-  margin-top: var(--space-2xl);
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
 }
 
 .resorts-load-more .btn {
-  min-width: 220px;
+  min-width: 200px;
 }
 
 /* Card mit Verbesserungen */
