@@ -10,8 +10,8 @@ type Props = {
 
 const OVERLAY_OPTIONS = [
   { id: "snowcover", label: "Schneehöhe" },
-  { id: "wind", label: "Wind" },
-  { id: "temp", label: "Temperatur" },
+  { id: "clouds", label: "Wolken" },
+  { id: "rain", label: "Regen" },
 ] as const;
 
 const DEFAULT_OVERLAY = OVERLAY_OPTIONS[0].id;
