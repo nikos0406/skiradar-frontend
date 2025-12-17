@@ -10,8 +10,8 @@ type Props = {
 
 const OVERLAY_OPTIONS = [
   { id: "snowcover", label: "Schneehöhe" },
-  { id: "wind", label: "Wind" },
-  { id: "temp", label: "Temperatur" },
+  { id: "clouds", label: "Wolken" },
+  { id: "rain", label: "Regen" },
 ] as const;
 
 const DEFAULT_OVERLAY = OVERLAY_OPTIONS[0].id;
@@ -44,7 +44,7 @@ export function WeatherOverlayMap({ lat, lon, resortName }: Props) {
     <section className="detail-map" aria-label="Windy Wetterkarte">
       <div className="detail-map__header">
         <h2 className="detail-map__title">{title}</h2>
-        <p className="detail-map__subtitle">Fokus bei {coordinatesText}. Overlays zeigen live Bedingungen.</p>
+        <p className="detail-map__subtitle">Overlays zeigen live Bedingungen.</p>
       </div>
       <div className="detail-map__controls" role="group" aria-label="Overlay auswählen">
         {OVERLAY_OPTIONS.map((option) => (
