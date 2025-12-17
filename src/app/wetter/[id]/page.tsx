@@ -307,6 +307,12 @@ export default async function ResortDetail({ params }: Props) {
                   </div>
                 </div>
                 <div className="stat">
+                  <div className="stat-label">Sonnenstunden</div>
+                  <div className="stat-value">
+                    {resort.sun_hours_today ?? "—"}<span className="unit">h</span>
+                  </div>
+                </div>
+                <div className="stat">
                   <div className="stat-label">Schneehöhe</div>
                   <div className="stat-value">
                     {resort.snow_depth_cm ?? "—"}<span className="unit">cm</span>
@@ -316,12 +322,6 @@ export default async function ResortDetail({ params }: Props) {
                   <div className="stat-label">Neuschnee (24h)</div>
                   <div className="stat-value">
                     {resort.snow_new_cm ?? "—"}<span className="unit">cm</span>
-                  </div>
-                </div>
-                <div className="stat">
-                  <div className="stat-label">Sonnenstunden</div>
-                  <div className="stat-value">
-                    {resort.sun_hours_today ?? "—"}<span className="unit">h</span>
                   </div>
                 </div>
                 <div className="stat">
@@ -407,16 +407,16 @@ export default async function ResortDetail({ params }: Props) {
                         <strong>{day.wind_kmh ?? "?"} km/h</strong>
                       </div>
                       <div>
+                        <span className="label">Sonne</span>
+                        <strong>{day.sun_hours ?? "?"} h</strong>
+                      </div>
+                      <div>
                         <span className="label">Schnee</span>
                         <strong>{day.snow_forecast_cm ?? "?"} cm</strong>
                       </div>
                       <div>
                         <span className="label">Regen</span>
                         <strong>{day.precipitation_mm ?? "?"} mm</strong>
-                      </div>
-                      <div>
-                        <span className="label">Sonne</span>
-                        <strong>{day.sun_hours ?? "?"} h</strong>
                       </div>
                     </div>
                   </div>

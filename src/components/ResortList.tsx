@@ -122,6 +122,12 @@ function ResortCard({ resort }: { resort: SkiResort }) {
             </span>
           </div>
           <div className="row">
+            <span className="row-label">Sonne</span>
+            <span className={`row-value ${resort.sun_hours_today == null ? "row-value-muted" : ""}`}>
+              {resort.sun_hours_today ?? "—"}<span className="units">h</span>
+            </span>
+          </div>
+          <div className="row">
             <span className="row-label">Schneehöhe</span>
             <span className={`row-value ${resort.snow_depth_cm == null ? "row-value-muted" : ""}`}>
               {resort.snow_depth_cm ?? "—"}<span className="units">cm</span>
