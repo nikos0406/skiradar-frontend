@@ -24,8 +24,8 @@ export default function LandingPage() {
       <div className="landing">
         <section className="landing-hero">
           <div className="landing-hero__content">
-            <div className="landing-badge">SkiRadar Intelligence (AI)</div>
-            <h1>Plane jeden Skitag mit SkiRadar Intelligence</h1>
+            <div className="landing-badge">SkiRadar</div>
+            <h1>Plane jeden Skitag mit SkiRadar</h1>
             <p>
               Unsere KI analysiert Schneeberichte, Wetterdaten und Webcams live und fasst alles im
               Conditions Calculator zusammen. Kein Rätselraten mehr – nur klare Powder-Entscheidungen.
