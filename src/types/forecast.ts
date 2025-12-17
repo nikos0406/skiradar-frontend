@@ -11,4 +11,5 @@ export type WeatherForecast = {
     weather_code?: number,
     weather_rating?: string | null,
     forecast_run: string
+    sun_hours?: string
 }

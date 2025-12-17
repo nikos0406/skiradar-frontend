@@ -87,10 +87,6 @@ export default function AddResortPage() {
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://…"
               />
-              <div className="subtitle">
-                Wird automatisch zu&nbsp;
-                <code>{normalizeWebcamUrl(imageUrl) || "https://…/current/720.jpg"}</code>
-              </div>
               <div className="preview" style={{ display: preview ? "block" : "none" }}>
                 {preview ? <img src={preview} alt="Vorschau" /> : null}
               </div>

@@ -319,6 +319,12 @@ export default async function ResortDetail({ params }: Props) {
                   </div>
                 </div>
                 <div className="stat">
+                  <div className="stat-label">Sonnenstunden</div>
+                  <div className="stat-value">
+                    {resort.sun_hours_today ?? "—"}<span className="unit">h</span>
+                  </div>
+                </div>
+                <div className="stat">
                   <div className="stat-label">Bedingungen</div>
                   <div className="stat-value stat-value--pill">
                     <span
@@ -407,6 +413,10 @@ export default async function ResortDetail({ params }: Props) {
                       <div>
                         <span className="label">Regen</span>
                         <strong>{day.precipitation_mm ?? "?"} mm</strong>
+                      </div>
+                      <div>
+                        <span className="label">Sonne</span>
+                        <strong>{day.sun_hours ?? "?"} h</strong>
                       </div>
                     </div>
                   </div>

@@ -15,6 +15,7 @@ export type SkiResort = {
   snow_ref_date?: string | null;
   last_update?: string | null;
   weather_rating?: string | null;
+  sun_hours_today?: string | null;
 };
 
 export type PaginatedSkiResortList = {
