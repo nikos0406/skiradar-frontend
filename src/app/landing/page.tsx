@@ -60,7 +60,7 @@ export default function LandingPage() {
               <li>
                 <div>
                   <div className="item-label">2. Conditions prüfen</div>
-                  <div className="item-value">AI scoret Powder, Wind & Sicht</div>
+                  <div className="item-value">AI ranked Schnee, Wind, Sicht & Temperatur</div>
                 </div>
                 <span className="item-badge muted">Automatisch</span>
               </li>
@@ -78,7 +78,7 @@ export default function LandingPage() {
         <section id="features" className="landing-features">
           <div className="landing-feature__intro">
             <div className="eyebrow">Features</div>
-            <h2>SkiRadar deckt alle Datenpunkte für deinen Powder-Plan ab</h2>
+            <h2>SkiRadar deckt alle Datenpunkte für deinen Ski-Plan ab</h2>
             <p>
               Von Schneehöhen über Windrichtung bis zur gefühlten Temperatur: Wir kombinieren
               Sensoren, Stationsdaten und Webcams, damit du in Sekunden entscheiden kannst.
