@@ -10,6 +10,20 @@ export function SiteFooter() {
           <div className="footer-title">SkiRadar</div>
           <p className="footer-desc">Live-Daten zu Schnee, Wetter und Webcams.</p>
           <span className="footer-meta">© {year} SkiRadar</span>
+          <a
+            className="hosttech"
+            href="https://www.hosttech.at/?promocode=62198340"
+            target="_blank"
+            rel="noreferrer"
+            title="Powered by hosttech"
+          >
+            <img
+              src="https://hosttech.eu/affiliate/logos/powered-by/powered-by-120x40px-inverted-bg.svg"
+              alt="Powered by hosttech"
+              width={120}
+              height={40}
+            />
+          </a>
         </div>
 
         <div className="footer-columns">
