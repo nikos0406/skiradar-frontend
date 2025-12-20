@@ -72,6 +72,16 @@
   color: #dbeafe;
 }
 
+.hosttech {
+  display: inline-flex;
+  margin-top: 8px;
+}
+
+.hosttech img {
+  width: 120px;
+  height: 40px;
+}
+
 @media (max-width: 640px) {
   .footer {
     padding: 16px var(--spacing-lg) 20px;
