@@ -97,7 +97,7 @@ export default function RootLayout({
         <script
           defer
           data-domain="skiradar.at"
-          src="http://analytics.skiradar.at/js/script.js"
+          src="https://analytics.skiradar.at/js/script.js"
         ></script>
         <script
           type="application/ld+json"
