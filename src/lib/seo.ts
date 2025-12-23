@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://www.skiradar.app";
+const FALLBACK_SITE_URL = "https://www.skiradar.at";
 
 function normalizeSiteUrl(url: string) {
   return url.replace(/\/$/, "");
@@ -8,7 +8,7 @@ export const SITE_URL = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FAL
 export const SITE_NAME = "SkiRadar";
 export const SITE_TAGLINE = "Live Skiwetter, Schneeberichte & Panorama-Webcams";
 export const SITE_DESCRIPTION =
-  "SkiRadar vereint Live-Skiwetter, Neuschnee, Wind, Lawinenlage und HD-Webcams aus beliebten Skigebieten. Hol dir die relevanten Schneebedingungen in einer einzigen Oberfläche.";
+  "SkiRadar vereint Live-Skiwetter, Neuschnee, Wind und HD-Webcams aus beliebten Skigebieten. Hol dir die relevanten Schneebedingungen in einer einzigen Oberfläche.";
 
 export const SEO_KEYWORDS = [
   "Ski Wetter",
@@ -17,7 +17,7 @@ export const SEO_KEYWORDS = [
   "Neuschnee Vorhersage",
   "Skigebiet Wetter",
   "Alpen Wetter Radar",
-  "Powder Forecast",
+  "Alpen Wetter Live",
   "Lawinenlage",
 ];
 
@@ -63,7 +63,7 @@ export const ORGANIZATION_JSON_LD = {
     {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "support@skiradar.app",
+      email: "support@skiradar.at",
       areaServed: "DE,AT,CH,IT,FR",
       availableLanguage: ["de", "en"],
     },

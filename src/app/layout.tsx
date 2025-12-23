@@ -99,6 +99,10 @@ export default function RootLayout({
           data-domain="skiradar.at"
           src="https://analytics.skiradar.at/js/script.js"
         ></script>
+        <script 
+          async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6751350891123151"
+          crossOrigin="anonymous"
+        ></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
