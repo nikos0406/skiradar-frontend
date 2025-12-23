@@ -43,8 +43,11 @@ export const metadata: Metadata = {
   generator: SITE_NAME,
   category: "travel",
   icons: {
-    icon: "/images/logo-small.svg",
-    shortcut: "/images/logo-small.svg",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/images/logo-small.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
   alternates: {
