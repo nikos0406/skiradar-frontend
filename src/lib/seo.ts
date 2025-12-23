@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://www.skiradar.app";
+const FALLBACK_SITE_URL = "https://www.skiradar.at";
 
 function normalizeSiteUrl(url: string) {
   return url.replace(/\/$/, "");
@@ -63,7 +63,7 @@ export const ORGANIZATION_JSON_LD = {
     {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "support@skiradar.app",
+      email: "support@skiradar.at",
       areaServed: "DE,AT,CH,IT,FR",
       availableLanguage: ["de", "en"],
     },

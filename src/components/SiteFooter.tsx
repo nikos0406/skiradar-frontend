@@ -32,7 +32,7 @@ export function SiteFooter() {
             <Link href="/landing">Überblick</Link>
           </div>
           <div className="footer-col">
-            <a href="mailto:support@skiradar.app">Kontakt</a>
+            <a href="mailto:support@skiradar.at">Kontakt</a>
             <Link href="/impressum">Impressum</Link>
           </div>
         </div>
