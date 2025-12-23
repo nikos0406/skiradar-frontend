@@ -28,12 +28,12 @@ export function SiteFooter() {
 
         <div className="footer-columns">
           <div className="footer-col">
-            <Link href="/landing">Überblick</Link>
             <Link href="/">Live-Daten</Link>
+            <Link href="/landing">Überblick</Link>
           </div>
           <div className="footer-col">
             <a href="mailto:support@skiradar.app">Kontakt</a>
-            <a href="mailto:feedback@skiradar.app">Feedback</a>
+            <Link href="/impressum">Impressum</Link>
           </div>
         </div>
       </div>
