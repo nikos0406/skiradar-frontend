@@ -7,9 +7,7 @@ function normalizeSiteUrl(url: string) {
 export const SITE_URL = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_SITE_URL);
 export const SITE_NAME = "SkiRadar";
 export const SITE_TAGLINE = "Live Skiwetter, Schneeberichte & Panorama-Webcams";
-export const SITE_DESCRIPTION =
-  "SkiRadar vereint Live-Skiwetter, Neuschnee, Wind und HD-Webcams aus beliebten Skigebieten. Hol dir die relevanten Schneebedingungen in einer einzigen Oberfläche.";
-
+export const SITE_DESCRIPTION = "SkiRadar bündelt Live-Skiwetter, Neuschnee, Wind, Temperaturen und Webcams aus Österreichs Skigebieten – übersichtlich, aktuell und auf einen Blick."
 export const SEO_KEYWORDS = [
   "Ski Wetter",
   "Schneebericht",
@@ -18,7 +16,7 @@ export const SEO_KEYWORDS = [
   "Skigebiet Wetter",
   "Alpen Wetter Radar",
   "Alpen Wetter Live",
-  "Lawinenlage",
+  "Skigebiet Webcams",
 ];
 
 export const PRIMARY_NAV_LINKS = [

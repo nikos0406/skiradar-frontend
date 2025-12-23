@@ -42,7 +42,11 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   generator: SITE_NAME,
   category: "travel",
-  icons: { icon: "/icon.svg" },
+  icons: {
+    icon: "/images/logo-small.svg",
+    shortcut: "/images/logo-small.svg",
+    apple: "/apple-touch-icon.png",
+  },
   alternates: {
     canonical: SITE_URL,
   },
