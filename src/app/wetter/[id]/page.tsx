@@ -253,7 +253,6 @@ export default async function ResortDetail({ params }: Props) {
       `${keywordBase} Webcam`,
       `${keywordBase} Schneehöhe`,
       `${keywordBase} Schneebericht`,
-      `${keywordBase} Lawinenlage`,
       `${keywordBase} Livecam`,
       locationDisplay !== "Standort unbekannt" ? `${keywordBase} Wetter ${locationDisplay.replace(" · ", " ")}` : null,
     ].filter(Boolean),
@@ -269,7 +268,7 @@ export default async function ResortDetail({ params }: Props) {
 
   const seoParagraph =
     metricSnippets.length > 0
-      ? `${displayName} liefert aktuell: ${metricSnippets.join(", ")}. Wir kombinieren diese Werte mit Wetterradar und HD-Webcams, damit Anfragen wie "${displayName} Wetter" oder "${displayName} Webcam" sofort beantwortet werden.`
+      ? `${displayName} liefert aktuell: ${metricSnippets.join(", ")}. Wir kombinieren diese Werte mit Wetterradar und Webcams, damit Anfragen wie "${displayName} Wetter" oder "${displayName} Webcam" sofort beantwortet werden.`
       : `${displayName} wird von SkiRadar mit stündlichen Wetter-, Schnee- und Webcam-Daten versorgt – ideal für Suchanfragen wie "${displayName} Wetter" oder "${displayName} Webcam".`;
 
   return (
@@ -435,10 +434,6 @@ export default async function ResortDetail({ params }: Props) {
               <span className="detail-seo__chevron" aria-hidden="true">▾</span>
             </summary>
             <div className="detail-seo__body">
-              <p>
-                {seoParagraph} Zusätzlich liefern wir Kontext zu Sichtfenstern, Lawinenlage und Powder-Fenstern in {locationDisplay} – perfekt,
-                wenn du gezielt nach Tourenwetter oder Liftstatus suchst.
-              </p>
               <div className="detail-seo__keywords">
                 {keywordChips.map((phrase) => (
                   <span key={phrase}>{phrase}</span>
