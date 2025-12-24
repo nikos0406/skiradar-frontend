@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     images: [
       {
-        url: "/images/placeholder.jpg",
+        url: "/images/icon.jpg",
         width: 1200,
         height: 630,
         alt: SITE_TAGLINE,
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} – ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
-    images: ["/images/placeholder.jpg"],
+    images: ["/images/icon.jpg"],
     creator: SITE_NAME,
   },
   robots: {
