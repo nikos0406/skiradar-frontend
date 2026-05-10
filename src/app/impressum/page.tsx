@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { SiteHeader } from "@/components/SiteHeader";
-import { SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { SITE_NAME } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Impressum",
@@ -9,9 +9,11 @@ export const metadata: Metadata = {
   robots: {
     index: false,
     follow: false,
-  },
-  alternates: {
-    canonical: absoluteUrl("/impressum"),
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
   },
 };
 
