@@ -323,17 +323,6 @@ export default async function ResortDetail({ params }: Props) {
                     {resort.snow_new_cm ?? "—"}<span className="unit">cm</span>
                   </div>
                 </div>
-                <div className="stat">
-                  <div className="stat-label">Bedingungen</div>
-                  <div className="stat-value stat-value--pill">
-                    <span
-                      className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(weatherRating)}`}
-                      aria-label="Aktuelle Bedingungen"
-                    >
-                      {formatWeatherRating(resort.weather_rating)}
-                    </span>
-                  </div>
-                </div>
               </div>
               <div className="detail-banner__footer">
                 <span className="detail-banner__footer-text">
@@ -384,13 +373,6 @@ export default async function ResortDetail({ params }: Props) {
                         label={day.weather_description ?? "Wetter"}
                       />
                       <div className="forecast-description">{day.weather_description ?? "Keine Beschreibung"}</div>
-                      <div className="forecast-rating-chip">
-                        <span
-                          className={`pill pill--rating pill--rating-${weatherRatingClassSuffix(day.weather_rating)}`}
-                        >
-                          Bedingungen: <strong>{formatWeatherRating(day.weather_rating)}</strong>
-                        </span>
-                      </div>
                     </div>
                     <div className="forecast-metrics">
                       <div>
